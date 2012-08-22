@@ -9,28 +9,22 @@ import com.badlogic.gdx.utils.ObjectMap;
  * Base class for games.
  * Implementations should implement the setup() method, and add any needed services and screens from it.
  */
-public abstract class BaseGame implements ApplicationListener {
+public abstract class GameBase implements Game {
 
     public static final String LOG_TAG = "BaseGame";
     private Array<Service> services = new Array<Service>();
-    private ObjectMap<String, Screen> screens = new ObjectMap<String, Screen>();
+    private Array<Screen> screens = new Array<Screen>();
     private Array<Screen> createdScreens = new Array<Screen>();
     private Screen currentScreen = null;
     private boolean running = false;
 
-    /**
-     * @return the name of the application, for logging etc.  Defaults to the simple name of the class.
-     */
+    @Override
     public String getApplicationName() {
         return getClass().getSimpleName();
     }
 
-    /**
-     * Adds a service to the application.  Should be called in setup.
-     * @param service the service to add.
-     * @return the added service.
-     */
-    public final Service addService(Service service) {
+    @Override
+    public final <T extends Service> T addService(T service) {
         if (running) throw new IllegalStateException("Can not add a service when the application is running.");
         if (services.contains(service, true)) throw new IllegalArgumentException("The game already contains the service '"+service.getServiceName()+"'");
 
@@ -38,40 +32,61 @@ public abstract class BaseGame implements ApplicationListener {
         return service;
     }
 
-    /**
-     * Add a screen to the application.  Can be called from setup.
-     * If this is the first screen added, it is made the default start screen.
-     * @param screen the screen to add.  Should have an unique id.
-     * @return the added screen.
-     */
+    @Override
     public final Screen addScreen(Screen screen) {
-        String id = screen.getId();
-        if (screens.containsKey(id)) throw new IllegalArgumentException("The game already contains a screen with the id '" + id + "'");
+        if (screen == null) throw new IllegalArgumentException("Screen should not be null");
+        if (screens.contains(screen, true)) throw new IllegalArgumentException("The game already contains the screen '" + screen.getId() + "'");
 
-        screens.put(id, screen);
+        screens.add(screen);
 
         if (currentScreen == null) {
             currentScreen = screen;
+
+            showScreen(screen);
         }
 
         return screen;
     }
 
-    /**
-     * Changes the currently active screen.
-     * @param screenName the name of the screen to change to.
-     */
-    public final void changeScreen(String screenName) {
-        if (!screens.containsKey(screenName)) throw new Error("Unknown screen '" + screenName + "'");
-        changeScreen(screens.get(screenName));
+    @Override
+    public final void removeScreen(Screen screen) {
+        if (!screens.contains(screen, true)) throw new IllegalArgumentException("The game does not contains a screen '" + screen.getId() + "'");
+        Gdx.app.log(LOG_TAG, "Removing screen " + screen.getId());
+
+        if (currentScreen == screen) {
+            hideScreen(screen);
+            currentScreen = null;
+        }
+
+        disposeScreen(screen);
+
+        screens.removeValue(screen, true);
     }
 
-    /**
-     * Changes the currently active screen.
-     * @param screen the screen to change to.
-     */
+    private void disposeScreen(Screen screen) {
+        if (createdScreens.contains(screen, true)) {
+            Gdx.app.log(LOG_TAG, "Disposing screen " + screen.getId());
+            screen.pause();
+            screen.dispose();
+            createdScreens.removeValue(screen, true);
+        }
+    }
+
+    @Override
+    public final void changeScreen(String screenId) {
+        for (Screen screen : screens) {
+            if (screen.getId().equals(screenId)) {
+                changeScreen(screen);
+                return;
+            }
+        }
+
+        throw new IllegalArgumentException("Unknown screen '" + screenId + "'");
+    }
+
+    @Override
     public final void changeScreen(Screen screen) {
-        if (!screens.containsValue(screen, true)) throw new Error("Unknown screen '" + screen.getId() + "'");
+        if (!screens.contains(screen, true)) throw new IllegalArgumentException("Unknown screen '" + screen.getId() + "'");
         if (currentScreen != screen) {
             String oldScreenName = currentScreen == null ? "None" : currentScreen.getId();
             String newScreenName = screen == null ? "None" : screen.getId();
@@ -85,9 +100,16 @@ public abstract class BaseGame implements ApplicationListener {
         }
     }
 
-    /**
-     * @return true if the game is running (has been created but not yet disposed).
-     */
+    @Override
+    public final void addAndChangeToScreen(Screen screen) {
+        if (!screens.contains(screen, true)) {
+            addScreen(screen);
+        }
+
+        changeScreen(screen);
+    }
+
+    @Override
     public final boolean isRunning() {
         return running;
     }
@@ -203,10 +225,7 @@ public abstract class BaseGame implements ApplicationListener {
                 screen.hide();
 
                 if (screen.getDisposeWhenClosed()) {
-                    Gdx.app.log(LOG_TAG, "Disposing screen " + screen.getId());
-                    screen.pause();
-                    screen.dispose();
-                    createdScreens.removeValue(screen, true);
+                    disposeScreen(screen);
                 }
             }
         }

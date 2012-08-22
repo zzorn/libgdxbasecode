@@ -1,17 +1,9 @@
 package org.gameflow;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import org.crawl.CrawlGame;
-
 /**
  * Base class for game screens.
  */
-public abstract class BaseScreen implements Screen {
+public abstract class ScreenBase implements Screen {
 
     private final boolean disposeWhenClosed;
     private final String id;
@@ -19,7 +11,7 @@ public abstract class BaseScreen implements Screen {
     /**
      * @param id an unique id for this screen.
      */
-    protected BaseScreen(String id) {
+    protected ScreenBase(String id) {
         this(id, true);
     }
 
@@ -27,7 +19,7 @@ public abstract class BaseScreen implements Screen {
      * @param id an unique id for this screen.
      * @param disposeWhenClosed whether the screen should always be disposed when it is closed (=some other screen opened), or if it should stay in memory.
      */
-    protected BaseScreen(String id, boolean disposeWhenClosed) {
+    protected ScreenBase(String id, boolean disposeWhenClosed) {
         if (id == null) id = getClass().getSimpleName();
 
         this.id = id;

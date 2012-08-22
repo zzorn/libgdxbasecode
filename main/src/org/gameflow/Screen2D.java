@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 /**
  * A screen implementation with a sprite stage and other utilities.
  */
-public abstract class Screen2D extends BaseScreen {
+public abstract class Screen2D extends ScreenBase {
 
     private BitmapFont font;
     private SpriteBatch batch;
