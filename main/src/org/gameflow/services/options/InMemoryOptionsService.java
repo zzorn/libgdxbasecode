@@ -1,4 +1,4 @@
-package org.gameflow.options;
+package org.gameflow.services.options;
 
 import com.badlogic.gdx.utils.ObjectMap;
 import org.gameflow.ServiceBase;

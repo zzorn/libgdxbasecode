@@ -1,4 +1,4 @@
-package org.gameflow.levels;
+package org.gameflow.services.levels;
 
 import com.badlogic.gdx.utils.Array;
 

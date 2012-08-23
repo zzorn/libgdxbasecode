@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.tablelayout.Table;
 import com.badlogic.gdx.utils.Array;
 import org.gameflowexample.ExampleGame;
-import org.gameflow.Screen2D;
-import org.gameflow.levels.Level;
+import org.gameflow.screen.Screen2D;
+import org.gameflow.services.levels.Level;
 
 /**
  *
@@ -15,11 +15,11 @@ import org.gameflow.levels.Level;
 public class ExampleLevelScreen extends Screen2D {
 
     private final Level level;
-    private final ExampleGame exampleGame;
+    private final ExampleGame game;
 
-    public ExampleLevelScreen(Level level, ExampleGame exampleGame) {
+    public ExampleLevelScreen(Level level, ExampleGame game) {
         this.level = level;
-        this.exampleGame = exampleGame;
+        this.game = game;
     }
 
     @Override
@@ -34,16 +34,18 @@ public class ExampleLevelScreen extends Screen2D {
         table.add(createButton("Fail level :~(", new ClickListener() {
             @Override
             public void click(Actor actor, float x, float y) {
-                exampleGame.changeScreen(exampleGame.mainScreen);
+                game.soundService.play(ExampleGame.Sounds.WHALE);
+                game.changeScreen(game.mainScreen);
             }
         }));
 
         table.add(createButton("Win level! :D", new ClickListener() {
             @Override
             public void click(Actor actor, float x, float y) {
-                Array<String> nextLevels = exampleGame.levelService.levelCompleted(level);
-                if (nextLevels.size > 0) exampleGame.levelService.startLevel(nextLevels.get(0));
-                else exampleGame.changeScreen(exampleGame.mainScreen);
+                game.soundService.play(ExampleGame.Sounds.FOOTFALL);
+                Array<String> nextLevels = game.levelService.levelCompleted(level);
+                if (nextLevels.size > 0) game.levelService.startLevel(nextLevels.get(0));
+                else game.changeScreen(game.mainScreen);
             }
         }));
 

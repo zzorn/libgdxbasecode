@@ -1,4 +1,4 @@
-package org.gameflow;
+package org.gameflow.screen;
 
 import com.badlogic.gdx.ApplicationListener;
 

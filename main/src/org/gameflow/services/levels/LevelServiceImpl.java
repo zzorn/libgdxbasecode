@@ -1,9 +1,9 @@
-package org.gameflow.levels;
+package org.gameflow.services.levels;
 
 import com.badlogic.gdx.utils.Array;
 import org.gameflow.ServiceBase;
 import org.gameflow.Game;
-import org.gameflow.options.OptionsService;
+import org.gameflow.services.options.OptionsService;
 
 /**
  * Implementation of LevelService.

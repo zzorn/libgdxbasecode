@@ -1,7 +1,7 @@
-package org.gameflow.levels;
+package org.gameflow.services.levels;
 
 import com.badlogic.gdx.utils.Array;
-import org.gameflow.Screen;
+import org.gameflow.screen.Screen;
 
 /**
  * Base class for levels.

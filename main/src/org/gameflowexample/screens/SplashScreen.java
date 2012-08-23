@@ -1,6 +1,6 @@
 package org.gameflowexample.screens;
 
-import org.gameflow.Screen2D;
+import org.gameflow.screen.Screen2D;
 
 
 /**

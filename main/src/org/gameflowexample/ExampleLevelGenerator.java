@@ -1,6 +1,6 @@
 package org.gameflowexample;
 
-import org.gameflow.levels.*;
+import org.gameflow.services.levels.*;
 
 /**
  *

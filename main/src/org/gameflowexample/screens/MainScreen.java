@@ -3,18 +3,17 @@ package org.gameflowexample.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.tablelayout.Table;
-import org.gameflow.Screen2D;
+import org.gameflow.screen.Screen2D;
 import org.gameflowexample.ExampleGame;
 
 public class MainScreen extends Screen2D {
 
-    private final ExampleGame exampleGame;
+    private final ExampleGame game;
 
-    public MainScreen(ExampleGame exampleGame) {
+    public MainScreen(ExampleGame game) {
         super("MainScreen", false);
-        this.exampleGame = exampleGame;
+        this.game = game;
     }
 
     @Override
@@ -25,14 +24,16 @@ public class MainScreen extends Screen2D {
         table.add(createButton("Start game", new ClickListener() {
             @Override
             public void click(Actor actor, float x, float y) {
-                exampleGame.levelService.startFirstLevel();
+                game.levelService.startFirstLevel();
+                game.soundService.play(ExampleGame.Sounds.UI_CLICK);
             }
         }));
 
         table.add(createButton("Options", new ClickListener() {
             @Override
             public void click(Actor actor, float x, float y) {
-                exampleGame.changeScreen(exampleGame.optionsScreen);
+                game.changeScreen(game.optionsScreen);
+                game.soundService.play(ExampleGame.Sounds.UI_CLICK);
             }
         }));
 
@@ -40,6 +41,7 @@ public class MainScreen extends Screen2D {
             @Override
             public void click(Actor actor, float x, float y) {
                 Gdx.app.exit();
+                game.soundService.play(ExampleGame.Sounds.WHALE);
             }
         }));
 

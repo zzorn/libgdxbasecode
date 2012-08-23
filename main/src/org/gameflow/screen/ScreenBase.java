@@ -1,4 +1,4 @@
-package org.gameflow;
+package org.gameflow.screen;
 
 /**
  * Base class for game screens.

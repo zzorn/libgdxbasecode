@@ -1,8 +1,8 @@
 package org.gameflowexample;
 
 import org.gameflowexample.screens.ExampleLevelScreen;
-import org.gameflow.Screen;
-import org.gameflow.levels.LevelBase;
+import org.gameflow.screen.Screen;
+import org.gameflow.services.levels.LevelBase;
 
 /**
  *

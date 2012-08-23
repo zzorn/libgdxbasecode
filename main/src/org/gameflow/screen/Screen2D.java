@@ -1,4 +1,4 @@
-package org.gameflow;
+package org.gameflow.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -49,9 +49,6 @@ public abstract class Screen2D extends ScreenBase {
         batch = new SpriteBatch();
         stage = new Stage(0, 0, true);
 
-        // set the input processor
-        Gdx.input.setInputProcessor(stage);
-
         onCreate();
     }
 
@@ -77,6 +74,15 @@ public abstract class Screen2D extends ScreenBase {
         stage.draw();
 
         onRender();
+    }
+
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
+    public void hide() {
     }
 
     protected void onRender() {}

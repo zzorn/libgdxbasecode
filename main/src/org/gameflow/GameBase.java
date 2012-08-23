@@ -1,9 +1,8 @@
 package org.gameflow;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
+import org.gameflow.screen.Screen;
 
 /**
  * Base class for games.
@@ -280,6 +279,7 @@ public abstract class GameBase implements Game {
         currentScreen = null;
 
         // Close services
+        services.reverse(); // Close in reversed order
         for (Service service : services) {
             Gdx.app.log(LOG_TAG, "Shutting down service " + service.getServiceName());
             service.dispose();

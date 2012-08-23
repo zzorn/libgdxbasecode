@@ -1,6 +1,7 @@
 package org.gameflow;
 
 import com.badlogic.gdx.ApplicationListener;
+import org.gameflow.screen.Screen;
 
 /**
  * Interface for applications.

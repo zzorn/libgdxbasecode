@@ -1,9 +1,6 @@
-package org.gameflow.levels;
+package org.gameflow.services.levels;
 
 import com.badlogic.gdx.utils.Array;
-import org.gameflow.Screen;
-
-import java.util.List;
 
 /**
  * Something that can generate levels.
