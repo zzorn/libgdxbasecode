@@ -26,19 +26,9 @@ public interface LevelGenerator {
     Array<String> getInitiallyUnlockedLevels();
 
     /**
-     * @return information about a specific level.
-     */
-    LevelInfo getLevelInfo(String levelId);
-
-    /**
      * @return a level instance with the specified id.
      */
     Level getLevel(String levelId);
-
-    /**
-     * @return screen used to select the next level.
-     */
-    LevelChooserScreen createLevelSelectionScreen();
 
     /**
      * Clear out any allocated resources.

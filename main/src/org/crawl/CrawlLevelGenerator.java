@@ -15,18 +15,17 @@ public class CrawlLevelGenerator extends LevelGeneratorBase {
     }
 
     @Override
-    protected Level createLevel(LevelInfo levelInfo) {
-        return new CrawlLevel(levelInfo, crawlGame);
+    protected Level createLevel(String levelId) {
+        return new CrawlLevel(levelId, getNextLevelId(levelId), crawlGame);
     }
 
-    @Override
-    public LevelInfo getLevelInfo(String levelId) {
+    private String getNextLevelId(String levelId) {
         if (levelId.equals("100")) {
             // Last level, game finished
-            return new LevelInfoBase(levelId, "Level " + levelId);
+            return "" + levelId;
         }
         else {
-            return new LevelInfoBase(levelId, "Level " + levelId, "" + (Integer.parseInt(levelId) + 1));
+            return "" + (Integer.parseInt(levelId) + 1);
         }
     }
 

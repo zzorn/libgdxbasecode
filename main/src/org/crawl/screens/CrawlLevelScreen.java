@@ -7,18 +7,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.tablelayout.Table;
 import com.badlogic.gdx.utils.Array;
 import org.crawl.CrawlGame;
 import org.gameflow.Screen2D;
-import org.gameflow.levels.LevelInfo;
+import org.gameflow.levels.Level;
 
 /**
  *
  */
 public class CrawlLevelScreen extends Screen2D {
 
-    private final LevelInfo levelInfo;
+    private final Level level;
     private final CrawlGame crawlGame;
 
-    public CrawlLevelScreen(LevelInfo levelInfo, CrawlGame crawlGame) {
-        this.levelInfo = levelInfo;
+    public CrawlLevelScreen(Level level, CrawlGame crawlGame) {
+        this.level = level;
         this.crawlGame = crawlGame;
     }
 
@@ -28,7 +28,7 @@ public class CrawlLevelScreen extends Screen2D {
         Table table = new Table(getSkin());
 
         TextButton lvl= new TextButton(getSkin());
-        lvl.setText(levelInfo.getName());
+        lvl.setText(level.getLevelId());
         table.add(lvl);
 
         TextButton fail = new TextButton(getSkin());
@@ -47,13 +47,14 @@ public class CrawlLevelScreen extends Screen2D {
         win.setClickListener(new ClickListener() {
             @Override
             public void click(Actor actor, float x, float y) {
-                Array<String> nextLevels = crawlGame.levelService.levelCompleted(levelInfo);
+                Array<String> nextLevels = crawlGame.levelService.levelCompleted(level);
                 if (nextLevels.size > 0) crawlGame.levelService.startLevel(nextLevels.get(0));
                 else crawlGame.levelService.startLevel(crawlGame.levelGenerator.getStartLevel());
             }
         });
 
-        table.layout();
+        table.setFillParent(true);
+        //table.layout();
         getStage().addActor(table);
     }
 

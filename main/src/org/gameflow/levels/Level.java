@@ -1,9 +1,10 @@
 package org.gameflow.levels;
 
+import com.badlogic.gdx.utils.Array;
 import org.gameflow.Screen;
 
 /**
- * The level with all data.
+ * Data about a level in the game.
  */
 public interface Level {
 
@@ -13,9 +14,9 @@ public interface Level {
     String getLevelId();
 
     /**
-     * @return generic information about the level.
+     * @return levels that are unlocked when completing this level.
      */
-    LevelInfo getInfo();
+    Array<String> getNextLevels();
 
     /**
      * @return a screen that the level can be played on.
@@ -24,8 +25,4 @@ public interface Level {
      */
     Screen getScreen();
 
-    /**
-     * Frees any resources used by this level object.
-     */
-    void dispose();
 }

@@ -3,7 +3,6 @@ package org.crawl;
 import org.crawl.screens.CrawlLevelScreen;
 import org.gameflow.Screen;
 import org.gameflow.levels.LevelBase;
-import org.gameflow.levels.LevelInfo;
 
 /**
  *
@@ -12,17 +11,14 @@ public class CrawlLevel extends LevelBase {
 
     private final CrawlGame crawlGame;
 
-    public CrawlLevel(LevelInfo levelInfo, CrawlGame crawlGame) {
-        super(levelInfo);
+    public CrawlLevel(String levelId, String nextLevelId, CrawlGame crawlGame) {
+        super(levelId, nextLevelId);
         this.crawlGame = crawlGame;
     }
 
     @Override
     protected Screen createLevelScreen() {
-        return new CrawlLevelScreen(getInfo(), crawlGame);
+        return new CrawlLevelScreen(this, crawlGame);
     }
 
-    @Override
-    protected void onDispose() {
-    }
 }

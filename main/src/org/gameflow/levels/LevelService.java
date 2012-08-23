@@ -16,15 +16,14 @@ public interface LevelService extends Service {
     /**
      * Should be called when a level completes successfully.
      * Unlocks next levels.
-     * May be followed with e.g. a call to startLevelChooser(), or directly startLevel().
      * @return the unlocked next levels.
      */
-    Array<String> levelCompleted(LevelInfo levelInfo);
+    Array<String> levelCompleted(Level level);
 
     /**
-     * Opens the level chooser screen.
+     * @return returns or re-creates the specified level.
      */
-    void startLevelChooser();
+    Level getLevel(String levelId);
 
     /**
      * @return the currently active level, or null if none.
@@ -46,9 +45,4 @@ public interface LevelService extends Service {
      * Adds a set of unlocked levels.
      */
     void addUnlockedLevels(Array<String> unlockedLevels);
-
-    /**
-     * @return the level information objects for the unlocked levels.
-     */
-    Array<LevelInfo> getUnlockedLevelInfos();
 }

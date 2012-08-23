@@ -39,16 +39,13 @@ public abstract class LevelGeneratorBase implements LevelGenerator {
 
     @Override
     public Level getLevel(String levelId) {
-        return createLevel(getLevelInfo(levelId));
+        // TODO: Do caching if needed
+        return createLevel(levelId);
     }
 
-    protected abstract Level createLevel(LevelInfo levelInfo);
+    protected abstract Level createLevel(String levelId);
 
     @Override
     public void shutdown() {}
 
-    @Override
-    public LevelChooserScreen createLevelSelectionScreen() {
-        return null;
-    }
 }

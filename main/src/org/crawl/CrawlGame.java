@@ -1,5 +1,7 @@
 package org.crawl;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import org.crawl.screens.MainScreen;
 import org.crawl.screens.OptionsScreen;
 import org.crawl.screens.SplashScreen;

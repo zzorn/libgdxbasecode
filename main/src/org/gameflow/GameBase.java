@@ -212,6 +212,10 @@ public abstract class GameBase implements Game {
 
                 screen.show();
 
+                // Call resize as well to let the screen know the dimensions
+                screen.resize(Gdx.graphics.getWidth(),
+                              Gdx.graphics.getHeight());
+
                 if (!createdScreens.contains(screen, true)) {
                     createdScreens.add(screen);
                 }

@@ -1,5 +1,6 @@
 package org.gameflow.levels;
 
+import com.badlogic.gdx.utils.Array;
 import org.gameflow.Screen;
 
 /**
@@ -7,21 +8,33 @@ import org.gameflow.Screen;
  */
 public abstract class LevelBase implements Level {
 
-    private final LevelInfo levelInfo;
+    private final String levelId;
+    private final Array<String> nextLevels = new Array<String>();
     private Screen levelScreen = null;
 
-    protected LevelBase(LevelInfo levelInfo) {
-        this.levelInfo = levelInfo;
+    public LevelBase(String levelId) {
+        this.levelId = levelId;
     }
+
+    public LevelBase(String levelId, Array<String> nextLevels) {
+        this.levelId = levelId;
+        this.nextLevels.addAll(nextLevels);
+    }
+
+    public LevelBase(String levelId, String nextLevel) {
+        this.levelId = levelId;
+        this.nextLevels.add(nextLevel);
+    }
+
 
     @Override
     public final String getLevelId() {
-        return levelInfo.getLevelId();
+        return levelId;
     }
 
     @Override
-    public final LevelInfo getInfo() {
-        return levelInfo;
+    public Array<String> getNextLevels() {
+        return nextLevels;
     }
 
     @Override
@@ -35,15 +48,4 @@ public abstract class LevelBase implements Level {
 
     protected abstract Screen createLevelScreen();
 
-    @Override
-    public final void dispose() {
-        if (levelScreen != null) {
-            levelScreen.pause();
-            levelScreen.dispose();
-            levelScreen = null;
-            onDispose();
-        }
-    }
-
-    protected abstract void onDispose();
 }

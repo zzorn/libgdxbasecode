@@ -12,14 +12,12 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
 
     private static final String UNLOCKED_LEVELS_KEY = "LevelService.unlockedLevels";
     private final LevelGenerator levelGenerator;
-    private final Game game;
     private final OptionsService optionsService;
+    private final Game game;
 
     private Array<String> unlockedLevels = new Array<String>();
-    private Array<LevelInfo> unlockedLevelInfos = new Array<LevelInfo>();
 
     private Level currentLevel = null;
-    private LevelChooserScreen levelChooserScreen = null;
 
     public LevelServiceImpl(LevelGenerator levelGenerator, Game game, OptionsService optionsService) {
         this.levelGenerator = levelGenerator;
@@ -35,10 +33,16 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
         // Get unlocked levels.
         unlockedLevels.addAll(levelGenerator.getInitiallyUnlockedLevels());
         unlockedLevels = optionsService.get(UNLOCKED_LEVELS_KEY, unlockedLevels);
+    }
 
-        // Populate unlocked level infos.
-        for (String unlockedLevel : unlockedLevels) {
-            unlockedLevelInfos.add(levelGenerator.getLevelInfo(unlockedLevel));
+    @Override
+    public Level getLevel(String levelId) {
+        // TODO: Maybe cache levels, if they do not take much memory? (most memory in levelscreen?)
+        if (currentLevel != null && currentLevel.getLevelId().equals(levelId)) {
+            return currentLevel;
+        }
+        else {
+            return levelGenerator.getLevel(levelId);
         }
     }
 
@@ -66,32 +70,12 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
     }
 
     @Override
-    public Array<String> levelCompleted(LevelInfo levelInfo) {
+    public Array<String> levelCompleted(Level level) {
         // Unlock new levels
-        Array<String> nextLevels = levelInfo.getNextLevels();
+        Array<String> nextLevels = level.getNextLevels();
         addUnlockedLevels(nextLevels);
 
         return nextLevels;
-    }
-
-    @Override
-    public void startLevelChooser() {
-        // Hide the level, if it is visible
-        hideLevelScreen();
-
-        // Try to create level chooser screen if needed
-        if (levelChooserScreen == null) {
-            levelChooserScreen = levelGenerator.createLevelSelectionScreen();
-        }
-
-        // Show level chooser screen if the generator created one
-        if (levelChooserScreen != null) {
-            // Notify level chooser of any new unlocked levels
-            levelChooserScreen.updateUnlockedLevels(getUnlockedLevelInfos());
-
-            // Switch to level chooser screen
-            game.addAndChangeToScreen(levelChooserScreen);
-        }
     }
 
     @Override
@@ -100,15 +84,9 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
     }
 
     @Override
-    public Array<LevelInfo> getUnlockedLevelInfos() {
-        return unlockedLevelInfos;
-    }
-
-    @Override
     public void addUnlockedLevel(String levelId) {
         if (!unlockedLevels.contains(levelId, false)) {
             unlockedLevels.add(levelId);
-            unlockedLevelInfos.add(levelGenerator.getLevelInfo(levelId));
 
             // Save
             optionsService.set(UNLOCKED_LEVELS_KEY, unlockedLevels);
@@ -130,7 +108,6 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
     private void hideLevelScreen() {
         if (currentLevel != null) {
             game.removeScreen(currentLevel.getScreen());
-            currentLevel.dispose();
             currentLevel = null;
         }
     }
