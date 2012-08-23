@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 /**
  * A screen implementation with a sprite stage and other utilities.
@@ -109,5 +111,15 @@ public abstract class Screen2D extends ScreenBase {
         }
         return skin;
     }
+
+
+
+    protected TextButton createButton(String text, ClickListener listener) {
+        TextButton button = new TextButton(getSkin());
+        button.setText(text);
+        button.setClickListener(listener);
+        return button;
+    }
+
 
 }

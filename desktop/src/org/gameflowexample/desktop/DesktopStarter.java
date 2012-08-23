@@ -1,8 +1,8 @@
-package org.crawl.desktop;
+package org.gameflowexample.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import org.crawl.CrawlGame;
+import org.gameflowexample.ExampleGame;
 
 /**
  * Starts the game as a desktop application.
@@ -11,11 +11,11 @@ public class DesktopStarter {
     public static void main(String[] args) {
 
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-        cfg.title = "crawl";
+        cfg.title = "GameFlow Example";
         cfg.useGL20 = false;
         cfg.width = 800;
         cfg.height = 600;
 
-        new LwjglApplication(new CrawlGame(), cfg);
+        new LwjglApplication(new ExampleGame(), cfg);
     }
 }

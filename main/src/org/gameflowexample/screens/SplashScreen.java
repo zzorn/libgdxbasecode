@@ -1,4 +1,4 @@
-package org.crawl.screens;
+package org.gameflowexample.screens;
 
 import org.gameflow.Screen2D;
 

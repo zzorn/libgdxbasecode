@@ -1,22 +1,22 @@
-package org.crawl;
+package org.gameflowexample;
 
 import org.gameflow.levels.*;
 
 /**
  *
  */
-public class CrawlLevelGenerator extends LevelGeneratorBase {
+public class ExampleLevelGenerator extends LevelGeneratorBase {
 
-    private final CrawlGame crawlGame;
+    private final ExampleGame exampleGame;
 
-    public CrawlLevelGenerator(CrawlGame crawlGame) {
+    public ExampleLevelGenerator(ExampleGame exampleGame) {
         super("1");
-        this.crawlGame = crawlGame;
+        this.exampleGame = exampleGame;
     }
 
     @Override
     protected Level createLevel(String levelId) {
-        return new CrawlLevel(levelId, getNextLevelId(levelId), crawlGame);
+        return new ExampleLevel(levelId, getNextLevelId(levelId), exampleGame);
     }
 
     private String getNextLevelId(String levelId) {

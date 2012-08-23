@@ -52,6 +52,12 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
     }
 
     @Override
+    public void startFirstLevel() {
+        String firstLevel = levelGenerator.getStartLevel();
+        startLevel(firstLevel);
+    }
+
+    @Override
     public void startLevel(String levelId) {
         log("Changing level to '"+levelId+"'");
 

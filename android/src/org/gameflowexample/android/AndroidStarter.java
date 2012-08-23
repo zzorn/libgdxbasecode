@@ -1,9 +1,9 @@
-package org.crawl.android;
+package org.gameflowexample.android;
 
 import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import org.crawl.CrawlGame;
+import org.gameflowexample.ExampleGame;
 
 /**
  * Starts the game on android.
@@ -23,7 +23,7 @@ public class AndroidStarter extends AndroidApplication {
         cfg.useWakelock = false;
         cfg.useGL20 = false;
 
-        initialize(new CrawlGame(), cfg);
+        initialize(new ExampleGame(), cfg);
     }
 
 }

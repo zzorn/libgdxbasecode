@@ -9,6 +9,11 @@ import org.gameflow.Service;
 public interface LevelService extends Service {
 
     /**
+     * Starts playing the first level.
+     */
+    void startFirstLevel();
+
+    /**
      * Starts playing the specified level.
      */
     void startLevel(String levelId);
