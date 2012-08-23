@@ -35,7 +35,7 @@ public class ExampleLevelScreen extends Screen2D {
             @Override
             public void click(Actor actor, float x, float y) {
                 game.soundService.play(ExampleGame.Sounds.WHALE);
-                game.changeScreen(game.mainScreen);
+                game.setScreen(new MainScreen(game));
             }
         }));
 
@@ -45,7 +45,7 @@ public class ExampleLevelScreen extends Screen2D {
                 game.soundService.play(ExampleGame.Sounds.FOOTFALL);
                 Array<String> nextLevels = game.levelService.levelCompleted(level);
                 if (nextLevels.size > 0) game.levelService.startLevel(nextLevels.get(0));
-                else game.changeScreen(game.mainScreen);
+                else game.setScreen(new MainScreen(game));
             }
         }));
 

@@ -44,7 +44,7 @@ public class OptionsScreen extends Screen2D {
         table.add(createButton("Return", new ClickListener() {
             @Override
             public void click(Actor actor, float x, float y) {
-                game.changeScreen(game.mainScreen);
+                game.setScreen(new MainScreen(game));
                 game.soundService.play(ExampleGame.Sounds.UI_ACCEPT);
             }
         })).colspan(2);

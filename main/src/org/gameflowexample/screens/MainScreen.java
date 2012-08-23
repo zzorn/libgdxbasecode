@@ -12,7 +12,6 @@ public class MainScreen extends Screen2D {
     private final ExampleGame game;
 
     public MainScreen(ExampleGame game) {
-        super("MainScreen", false);
         this.game = game;
     }
 
@@ -32,7 +31,7 @@ public class MainScreen extends Screen2D {
         table.add(createButton("Options", new ClickListener() {
             @Override
             public void click(Actor actor, float x, float y) {
-                game.changeScreen(game.optionsScreen);
+                game.setScreen(new OptionsScreen(game));
                 game.soundService.play(ExampleGame.Sounds.UI_CLICK);
             }
         }));

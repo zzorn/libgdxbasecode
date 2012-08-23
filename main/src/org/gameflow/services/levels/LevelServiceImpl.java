@@ -61,8 +61,8 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
     public void startLevel(String levelId) {
         log("Changing level to '"+levelId+"'");
 
-        // Hide previous level screen
-        hideLevelScreen();
+        // Stop earlier level
+        currentLevel = null;
 
         // Change current level
         if (levelId != null && !levelId.trim().isEmpty()) {
@@ -71,7 +71,7 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
 
         // Show new level screen
         if (currentLevel != null) {
-            game.addAndChangeToScreen(currentLevel.getScreen());
+            game.setScreen(currentLevel.getScreen());
         }
     }
 
@@ -111,10 +111,4 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
         levelGenerator.shutdown();
     }
 
-    private void hideLevelScreen() {
-        if (currentLevel != null) {
-            game.removeScreen(currentLevel.getScreen());
-            currentLevel = null;
-        }
-    }
 }

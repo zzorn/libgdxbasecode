@@ -12,8 +12,6 @@ public abstract class GameBase implements Game {
 
     public static final String LOG_TAG = "BaseGame";
     private Array<Service> services = new Array<Service>();
-    private Array<Screen> screens = new Array<Screen>();
-    private Array<Screen> createdScreens = new Array<Screen>();
     private Screen currentScreen = null;
     private boolean running = false;
 
@@ -32,60 +30,7 @@ public abstract class GameBase implements Game {
     }
 
     @Override
-    public final Screen addScreen(Screen screen) {
-        if (screen == null) throw new IllegalArgumentException("Screen should not be null");
-        if (screens.contains(screen, true)) throw new IllegalArgumentException("The game already contains the screen '" + screen.getId() + "'");
-
-        screens.add(screen);
-
-        if (currentScreen == null) {
-            currentScreen = screen;
-
-            showScreen(screen);
-        }
-
-        return screen;
-    }
-
-    @Override
-    public final void removeScreen(Screen screen) {
-        if (!screens.contains(screen, true)) throw new IllegalArgumentException("The game does not contains a screen '" + screen.getId() + "'");
-        Gdx.app.log(LOG_TAG, "Removing screen " + screen.getId());
-
-        if (currentScreen == screen) {
-            hideScreen(screen);
-            currentScreen = null;
-        }
-
-        disposeScreen(screen);
-
-        screens.removeValue(screen, true);
-    }
-
-    private void disposeScreen(Screen screen) {
-        if (createdScreens.contains(screen, true)) {
-            Gdx.app.log(LOG_TAG, "Disposing screen " + screen.getId());
-            screen.pause();
-            screen.dispose();
-            createdScreens.removeValue(screen, true);
-        }
-    }
-
-    @Override
-    public final void changeScreen(String screenId) {
-        for (Screen screen : screens) {
-            if (screen.getId().equals(screenId)) {
-                changeScreen(screen);
-                return;
-            }
-        }
-
-        throw new IllegalArgumentException("Unknown screen '" + screenId + "'");
-    }
-
-    @Override
-    public final void changeScreen(Screen screen) {
-        if (!screens.contains(screen, true)) throw new IllegalArgumentException("Unknown screen '" + screen.getId() + "'");
+    public final void setScreen(Screen screen) {
         if (currentScreen != screen) {
             String oldScreenName = currentScreen == null ? "None" : currentScreen.getId();
             String newScreenName = screen == null ? "None" : screen.getId();
@@ -97,15 +42,6 @@ public abstract class GameBase implements Game {
 
             showScreen(currentScreen);
         }
-    }
-
-    @Override
-    public final void addAndChangeToScreen(Screen screen) {
-        if (!screens.contains(screen, true)) {
-            addScreen(screen);
-        }
-
-        changeScreen(screen);
     }
 
     @Override
@@ -162,9 +98,9 @@ public abstract class GameBase implements Game {
             service.resize(width, height);
         }
 
-        // Notify initialized screens
-        for (Screen createdScreen : createdScreens) {
-            createdScreen.resize(width, height);
+        // Notify current screen
+        if (currentScreen != null) {
+            currentScreen .resize(width, height);
         }
     }
 
@@ -184,6 +120,60 @@ public abstract class GameBase implements Game {
         }
     }
 
+    @Override
+    public final void pause() {
+        Gdx.app.log(LOG_TAG, "Pausing");
+
+        // Notify services
+        for (Service service : services) {
+            service.pause();
+        }
+
+        // Notify current screen
+        if (currentScreen != null) {
+            currentScreen.pause();
+        }
+    }
+
+    @Override
+    public final void resume() {
+        Gdx.app.log(LOG_TAG, "Resuming");
+
+        // Notify services
+        for (Service service : services) {
+            service.resume();
+        }
+
+        // Notify current screen
+        if (currentScreen != null) {
+            currentScreen.resume();
+        }
+    }
+
+    @Override
+    public final void dispose() {
+        Gdx.app.log(LOG_TAG, "Shutting down " + getApplicationName());
+
+        onShutdownStarted();
+
+        // Close current screen
+        hideScreen(currentScreen);
+
+        // Close services
+        services.reverse(); // Close in reversed order
+        for (Service service : services) {
+            Gdx.app.log(LOG_TAG, "Shutting down service " + service.getServiceName());
+            service.dispose();
+        }
+
+        running = false;
+
+        onShutdownDone();
+
+        Gdx.app.log(LOG_TAG, "Shutdown complete");
+    }
+
+
     private void doUpdate() {
         // TODO: More complicated logic updates could be done here.
         // TODO: See http://gafferongames.com/game-physics/fix-your-timestep/
@@ -202,93 +192,21 @@ public abstract class GameBase implements Game {
     }
 
     private void showScreen(Screen screen) {
-        if (screen != null) {
-            if (running) {
-                if (!createdScreens.contains(screen, true)) {
-                    Gdx.app.log(LOG_TAG, "Creating screen " + screen.getId());
-                    screen.create();
-                }
-
-                screen.show();
-
-                // Call resize as well to let the screen know the dimensions
-                screen.resize(Gdx.graphics.getWidth(),
-                              Gdx.graphics.getHeight());
-
-                if (!createdScreens.contains(screen, true)) {
-                    createdScreens.add(screen);
-                }
-            }
+        if (screen != null && running) {
+            Gdx.app.log(LOG_TAG, "Creating screen " + screen.getId());
+            screen.create();
+            screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            screen.show();
         }
     }
 
     private void hideScreen(Screen screen) {
-        if (screen != null) {
-            if (running) {
-                screen.hide();
-
-                if (screen.getDisposeWhenClosed()) {
-                    disposeScreen(screen);
-                }
-            }
+        if (screen != null && running) {
+            Gdx.app.log(LOG_TAG, "Disposing screen " + screen.getId());
+            screen.hide();
+            screen.pause();
+            screen.dispose();
         }
     }
 
-    @Override
-    public final void pause() {
-        Gdx.app.log(LOG_TAG, "Pausing");
-
-        // Notify services
-        for (Service service : services) {
-            service.pause();
-        }
-
-        // Notify initialized screens
-        for (Screen createdScreen : createdScreens) {
-            createdScreen.pause();
-        }
-    }
-
-    @Override
-    public final void resume() {
-        Gdx.app.log(LOG_TAG, "Resuming");
-
-        // Notify services
-        for (Service service : services) {
-            service.resume();
-        }
-
-        // Notify initialized screens
-        for (Screen createdScreen : createdScreens) {
-            createdScreen.resume();
-        }
-    }
-
-    @Override
-    public final void dispose() {
-        Gdx.app.log(LOG_TAG, "Shutting down " + getApplicationName());
-
-        onShutdownStarted();
-
-        // Close created screens
-        for (Screen createdScreen : createdScreens) {
-            Gdx.app.log(LOG_TAG, "Disposing screen " + createdScreen.getId());
-            createdScreen.dispose();
-        }
-        createdScreens.clear();
-        currentScreen = null;
-
-        // Close services
-        services.reverse(); // Close in reversed order
-        for (Service service : services) {
-            Gdx.app.log(LOG_TAG, "Shutting down service " + service.getServiceName());
-            service.dispose();
-        }
-
-        running = false;
-
-        onShutdownDone();
-
-        Gdx.app.log(LOG_TAG, "Shutdown complete");
-    }
 }

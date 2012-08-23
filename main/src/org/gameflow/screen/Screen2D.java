@@ -27,10 +27,6 @@ public abstract class Screen2D extends ScreenBase {
         super(id);
     }
 
-    public Screen2D(String id, boolean disposeWhenClosed) {
-        super(id, disposeWhenClosed);
-    }
-
     public BitmapFont getFont() {
         return font;
     }

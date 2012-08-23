@@ -13,13 +13,6 @@ public interface Screen extends ApplicationListener  {
     String getId();
 
     /**
-     *
-     * @return true if this screen should be disposed when it is navigated away from (and created when navigated back to),
-     * false if it should only be disposed when the application closes.
-     */
-    boolean getDisposeWhenClosed();
-
-    /**
      * Called when the screen has been activated.
      */
     void show();

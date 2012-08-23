@@ -23,11 +23,6 @@ public class ExampleGame extends GameBase {
     public final LevelService levelService = addService(new LevelServiceImpl(levelGenerator, this, optionsService));
     public final SoundService soundService = addService(new SoundServiceImpl());
 
-//    public final Screen splashScreen = addScreen(new SplashScreen());
-
-    public final Screen mainScreen = addScreen(new MainScreen(this));
-    public final Screen optionsScreen = addScreen(new OptionsScreen(this));
-
     /**
      * The available sound files.
      */
@@ -55,7 +50,7 @@ public class ExampleGame extends GameBase {
 
     @Override
     protected void setup() {
-        changeScreen(mainScreen);
+        setScreen(new MainScreen(this));
     }
 
 }
