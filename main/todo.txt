@@ -1,0 +1,11 @@
+
+GameFlow Tasks
+==============
+
+* Test inputs (keyboard & touch)
+* Tile map rendering
+* Create script for image map generation
+* Test packaging, create scripts
+* Test font generation
+
+

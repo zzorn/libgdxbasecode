@@ -1,7 +1,10 @@
 package org.gameflowexample.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -20,6 +23,7 @@ public class ExampleLevelScreen extends Screen2D {
     private final ExampleGame game;
 
     private ParticleEffect particleEffect;
+    private TextureAtlas atlas;
 
     public ExampleLevelScreen(Level level, ExampleGame game) {
         this.level = level;
@@ -58,8 +62,15 @@ public class ExampleLevelScreen extends Screen2D {
 
         getStage().addActor(table);
 
+        atlas = new TextureAtlas(Gdx.files.internal("images/images.pack"));
+        /*
+        TextureAtlas.AtlasRegion region = atlas.findRegion("imagename");
+        Sprite sprite = atlas.createSprite("otherimagename");
+        NinePatch patch = atlas.createPatch("patchimagename");
+        */
+
         particleEffect = new ParticleEffect();
-        particleEffect.load(Gdx.files.internal("particles/testparticles.properties"), Gdx.files.internal("images"));
+        particleEffect.load(Gdx.files.internal("particles/testparticles.properties"), atlas);
         int w = Gdx.graphics.getWidth();
         int h = Gdx.graphics.getHeight();
         int x = (int)(Math.random() * w);
@@ -81,5 +92,6 @@ public class ExampleLevelScreen extends Screen2D {
     @Override
     protected void onDispose() {
         particleEffect.dispose();
+        atlas.dispose();
     }
 }
