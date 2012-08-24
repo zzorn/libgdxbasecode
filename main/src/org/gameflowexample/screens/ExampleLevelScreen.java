@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.FadeIn;
 import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.tablelayout.Table;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import org.gameflowexample.ExampleGame;
 import org.gameflow.screen.Screen2D;
 import org.gameflow.services.levels.Level;
+import org.gameflowexample.entities.Ship2D;
 
 /**
  *
@@ -24,6 +26,7 @@ public class ExampleLevelScreen extends Screen2D {
 
     private ParticleEffect particleEffect;
     private TextureAtlas atlas;
+    private Ship2D ship2D;
 
     public ExampleLevelScreen(Level level, ExampleGame game) {
         this.level = level;
@@ -69,6 +72,7 @@ public class ExampleLevelScreen extends Screen2D {
         NinePatch patch = atlas.createPatch("patchimagename");
         */
 
+        // Show level start effect
         particleEffect = new ParticleEffect();
         particleEffect.load(Gdx.files.internal("particles/testparticles.properties"), atlas);
         int w = Gdx.graphics.getWidth();
@@ -77,6 +81,18 @@ public class ExampleLevelScreen extends Screen2D {
         int y = (int)(Math.random() * h);
         particleEffect.setPosition(x, y);
         particleEffect.start();
+
+        // Show ship
+        ship2D = new Ship2D(atlas);
+        ship2D.x = x;
+        ship2D.y = y;
+        addEntity(ship2D);
+
+
+        // Add a fade-in effect to the whole stage
+        getStage().getRoot().color.a = 0f;
+        getStage().getRoot().action( FadeIn.$(0.5f) );
+
     }
 
     @Override

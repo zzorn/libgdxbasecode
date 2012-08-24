@@ -3,9 +3,16 @@ images.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-particle
+mushroomrocket
   rotate: false
   xy: 0, 0
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1
+particle
+  rotate: false
+  xy: 32, 32
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
