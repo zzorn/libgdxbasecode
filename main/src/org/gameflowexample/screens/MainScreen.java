@@ -12,7 +12,7 @@ public class MainScreen extends Screen2D {
     private final ExampleGame game;
 
     public MainScreen(ExampleGame game) {
-        this.game = game;
+        this.game =game;
     }
 
     @Override
@@ -26,7 +26,11 @@ public class MainScreen extends Screen2D {
                 game.levelService.startFirstLevel();
                 game.soundService.play(ExampleGame.Sounds.UI_CLICK);
             }
-        }));
+        })).fillX().padBottom(10);
+
+
+        table.row();
+
 
         table.add(createButton("Options", new ClickListener() {
             @Override
@@ -34,15 +38,22 @@ public class MainScreen extends Screen2D {
                 game.setScreen(new OptionsScreen(game));
                 game.soundService.play(ExampleGame.Sounds.UI_CLICK);
             }
-        }));
+        })).fillX().padBottom(10);
+
+        table.row();
 
         table.add(createButton("Quit game", new ClickListener() {
             @Override
             public void click(Actor actor, float x, float y) {
-                Gdx.app.exit();
                 game.soundService.play(ExampleGame.Sounds.WHALE);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // do nothing
+                }
+                Gdx.app.exit();
             }
-        }));
+        })).fillX().padBottom(10);
 
         table.setFillParent(true);
 

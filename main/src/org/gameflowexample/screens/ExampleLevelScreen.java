@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.FadeIn;
 import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.tablelayout.Table;
 import com.badlogic.gdx.utils.Array;
@@ -25,6 +26,7 @@ public class ExampleLevelScreen extends Screen2D {
     private final ExampleGame game;
 
     private ParticleEffect particleEffect;
+    private ParticleEffect snowEffect;
     private TextureAtlas atlas;
     private Ship2D ship2D;
 
@@ -38,28 +40,22 @@ public class ExampleLevelScreen extends Screen2D {
 
         Table table = new Table(getSkin());
 
-        TextButton lvl= new TextButton(getSkin());
-        lvl.setText(level.getLevelId());
-        table.add(lvl);
+        Label lvl= new Label(getSkin());
+        lvl.setText("Level " + level.getLevelId());
+        table.add(lvl).padBottom(50).colspan(2);
+        table.row();
 
-        table.add(createButton("Fail level :~(", new ClickListener() {
-            @Override
-            public void click(Actor actor, float x, float y) {
-                game.soundService.play(ExampleGame.Sounds.WHALE);
-                game.setScreen(new MainScreen(game));
+        double order =Math.random();
+        if (order<0.5) {
+            addFailButton(table);
+            addWinButton(table);
+        }
+        else {
+            addWinButton(table);
+            addFailButton(table);
 
-            }
-        }));
+        }
 
-        table.add(createButton("Win level! :D", new ClickListener() {
-            @Override
-            public void click(Actor actor, float x, float y) {
-                game.soundService.play(ExampleGame.Sounds.FOOTFALL);
-                Array<String> nextLevels = game.levelService.levelCompleted(level);
-                if (nextLevels.size > 0) game.levelService.startLevel(nextLevels.get(0));
-                else game.setScreen(new MainScreen(game));
-            }
-        }));
 
         table.setFillParent(true);
 
@@ -79,8 +75,15 @@ public class ExampleLevelScreen extends Screen2D {
         int h = Gdx.graphics.getHeight();
         int x = (int)(Math.random() * w);
         int y = (int)(Math.random() * h);
-        particleEffect.setPosition(x, y);
+        int cx = (int) (w/2);
+        int cy = (int) (h/2);
+        particleEffect.setPosition(cx, cy);
         particleEffect.start();
+
+        snowEffect = new ParticleEffect();
+        snowEffect.load(Gdx.files.internal("particles/snowstorm.properties"), atlas);
+        snowEffect.setPosition(x, y);
+        snowEffect.start();
 
         // Show ship
         ship2D = new Ship2D(atlas);
@@ -95,19 +98,45 @@ public class ExampleLevelScreen extends Screen2D {
 
     }
 
+    private void addWinButton(Table table) {
+        table.add(createButton("Win level! :D", new ClickListener() {
+            @Override
+            public void click(Actor actor, float x, float y) {
+                game.soundService.play(ExampleGame.Sounds.FOOTFALL);
+                Array<String> nextLevels = game.levelService.levelCompleted(level);
+                if (nextLevels.size > 0) game.levelService.startLevel(nextLevels.get(0));
+                else game.setScreen(new MainScreen(game));
+            }
+        }));
+    }
+
+    private void addFailButton(Table table) {
+        table.add(createButton("Fail level :~(", new ClickListener() {
+            @Override
+            public void click(Actor actor, float x, float y) {
+                game.soundService.play(ExampleGame.Sounds.WHALE);
+                game.setScreen(new MainScreen(game));
+
+            }
+        }));
+    }
+
     @Override
     protected void onRender() {
         particleEffect.draw(getBatch());
+        snowEffect.draw(getBatch());
     }
 
     @Override
     protected void onUpdate(float deltaSeconds) {
         particleEffect.update(deltaSeconds);
+        snowEffect.update(deltaSeconds);
     }
 
     @Override
     protected void onDispose() {
         particleEffect.dispose();
+        snowEffect.dispose();
         atlas.dispose();
     }
 }

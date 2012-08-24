@@ -19,6 +19,7 @@ import org.gameflow.services.options.OptionsService;
 public class ExampleGame extends GameBase {
 
     public final LevelGenerator levelGenerator = new ExampleLevelGenerator(this);
+
     public final OptionsService optionsService = addService(new InMemoryOptionsService());
     public final LevelService levelService = addService(new LevelServiceImpl(levelGenerator, this, optionsService));
     public final SoundService soundService = addService(new SoundServiceImpl());

@@ -3,23 +3,30 @@ images.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+snowflake2
+  rotate: false
+  xy: 0, 3
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 mushroomrocket
   rotate: false
-  xy: 0, 0
+  xy: 64, 3
   size: 32, 64
   orig: 32, 64
   offset: 0, 0
   index: -1
 particle
   rotate: false
-  xy: 32, 32
+  xy: 96, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 snowflake
   rotate: false
-  xy: 32, 0
+  xy: 96, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
