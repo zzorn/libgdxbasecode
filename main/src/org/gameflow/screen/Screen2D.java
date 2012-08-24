@@ -69,7 +69,9 @@ public abstract class Screen2D extends ScreenBase {
         // Draw the stage actors
         stage.draw();
 
+        batch.begin();
         onRender();
+        batch.end();
     }
 
     @Override

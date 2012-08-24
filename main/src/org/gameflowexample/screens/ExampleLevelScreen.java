@@ -1,5 +1,7 @@
 package org.gameflowexample.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -16,6 +18,8 @@ public class ExampleLevelScreen extends Screen2D {
 
     private final Level level;
     private final ExampleGame game;
+
+    private ParticleEffect particleEffect;
 
     public ExampleLevelScreen(Level level, ExampleGame game) {
         this.level = level;
@@ -36,6 +40,7 @@ public class ExampleLevelScreen extends Screen2D {
             public void click(Actor actor, float x, float y) {
                 game.soundService.play(ExampleGame.Sounds.WHALE);
                 game.setScreen(new MainScreen(game));
+
             }
         }));
 
@@ -52,10 +57,29 @@ public class ExampleLevelScreen extends Screen2D {
         table.setFillParent(true);
 
         getStage().addActor(table);
+
+        particleEffect = new ParticleEffect();
+        particleEffect.load(Gdx.files.internal("particles/testparticles.properties"), Gdx.files.internal("images"));
+        int w = Gdx.graphics.getWidth();
+        int h = Gdx.graphics.getHeight();
+        int x = (int)(Math.random() * w);
+        int y = (int)(Math.random() * h);
+        particleEffect.setPosition(x, y);
+        particleEffect.start();
+    }
+
+    @Override
+    protected void onRender() {
+        particleEffect.draw(getBatch());
+    }
+
+    @Override
+    protected void onUpdate(float deltaSeconds) {
+        particleEffect.update(deltaSeconds);
     }
 
     @Override
     protected void onDispose() {
-
+        particleEffect.dispose();
     }
 }
