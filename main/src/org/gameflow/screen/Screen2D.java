@@ -19,6 +19,8 @@ import org.gameflow.entity.Entity;
  */
 public abstract class Screen2D extends ScreenBase {
 
+    public final static int SCREEN_SIZE_SCALE = 2;
+
     private BitmapFont font;
     private SpriteBatch batch;
     private Stage stage;
@@ -47,7 +49,6 @@ public abstract class Screen2D extends ScreenBase {
         return stage;
     }
 
-    @Override
     public final void create() {
         font = new BitmapFont();
         batch = new SpriteBatch();
@@ -140,14 +141,15 @@ public abstract class Screen2D extends ScreenBase {
     @Override
     public void resize(int width, int height) {
         // Resize the stage
-        stage.setViewport(width, height, true);
+        stage.setViewport(width / SCREEN_SIZE_SCALE,
+                          height / SCREEN_SIZE_SCALE,
+                          true);
 
         onResize(width, height);
     }
 
     protected void onResize(int width, int height) {}
 
-    @Override
     public final void dispose() {
         onDispose();
 

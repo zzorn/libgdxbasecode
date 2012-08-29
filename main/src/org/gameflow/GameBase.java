@@ -21,7 +21,6 @@ public abstract class GameBase implements Game {
         return getClass().getSimpleName();
     }
 
-    @Override
     public final <T extends Service> T addService(T service) {
         if (running) throw new IllegalStateException("Can not add a service when the application is running.");
         if (services.contains(service, true)) throw new IllegalArgumentException("The game already contains the service '"+service.getServiceName()+"'");
@@ -30,7 +29,6 @@ public abstract class GameBase implements Game {
         return service;
     }
 
-    @Override
     public final void setScreen(Screen screen) {
         if (currentScreen != screen) {
             String oldScreenName = currentScreen == null ? "None" : currentScreen.getId();
@@ -45,7 +43,6 @@ public abstract class GameBase implements Game {
         }
     }
 
-    @Override
     public final boolean isRunning() {
         return running;
     }
@@ -72,9 +69,9 @@ public abstract class GameBase implements Game {
     protected void onShutdownDone() {}
 
 
-    @Override
     public final void create() {
         Gdx.app.log(LOG_TAG, getApplicationName() + " starting up");
+
 
         setup();
 
@@ -90,7 +87,6 @@ public abstract class GameBase implements Game {
         onSetupDone();
     }
 
-    @Override
     public final void resize(int width, int height) {
         Gdx.app.debug(LOG_TAG, "Resizing screen size to (" + width + ", " + height + ")");
 
@@ -105,7 +101,6 @@ public abstract class GameBase implements Game {
         }
     }
 
-    @Override
     public final void render() {
         // Do logic update
         doUpdate();
@@ -121,7 +116,6 @@ public abstract class GameBase implements Game {
         }
     }
 
-    @Override
     public final void pause() {
         Gdx.app.log(LOG_TAG, "Pausing");
 
@@ -136,7 +130,6 @@ public abstract class GameBase implements Game {
         }
     }
 
-    @Override
     public final void resume() {
         Gdx.app.log(LOG_TAG, "Resuming");
 
@@ -151,7 +144,6 @@ public abstract class GameBase implements Game {
         }
     }
 
-    @Override
     public final void dispose() {
         Gdx.app.log(LOG_TAG, "Shutting down " + getApplicationName());
 

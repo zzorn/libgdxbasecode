@@ -18,7 +18,7 @@ public class AndroidStarter extends AndroidApplication {
         super.onCreate(savedInstanceState);
 
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
-        cfg.useAccelerometer = false;
+        cfg.useAccelerometer = true;
         cfg.useCompass = false;
         cfg.useWakelock = false;
         cfg.useGL20 = false;

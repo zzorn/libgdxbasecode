@@ -35,7 +35,6 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
         unlockedLevels = optionsService.get(UNLOCKED_LEVELS_KEY, unlockedLevels);
     }
 
-    @Override
     public Level getLevel(String levelId) {
         // TODO: Maybe cache levels, if they do not take much memory? (most memory in levelscreen?)
         if (currentLevel != null && currentLevel.getLevelId().equals(levelId)) {
@@ -46,18 +45,15 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
         }
     }
 
-    @Override
     public Level getCurrentLevel() {
         return currentLevel;
     }
 
-    @Override
     public void startFirstLevel() {
         String firstLevel = levelGenerator.getStartLevel();
         startLevel(firstLevel);
     }
 
-    @Override
     public void startLevel(String levelId) {
         log("Changing level to '"+levelId+"'");
 
@@ -65,7 +61,7 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
         currentLevel = null;
 
         // Change current level
-        if (levelId != null && !levelId.trim().isEmpty()) {
+        if (levelId != null && !(levelId.trim().length() == 0)) {
             currentLevel = levelGenerator.getLevel(levelId);
         }
 
@@ -75,7 +71,6 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
         }
     }
 
-    @Override
     public Array<String> levelCompleted(Level level) {
         // Unlock new levels
         Array<String> nextLevels = level.getNextLevels();
@@ -84,12 +79,10 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
         return nextLevels;
     }
 
-    @Override
     public Array<String> getUnlockedLevels() {
         return unlockedLevels;
     }
 
-    @Override
     public void addUnlockedLevel(String levelId) {
         if (!unlockedLevels.contains(levelId, false)) {
             unlockedLevels.add(levelId);
@@ -99,7 +92,6 @@ public class LevelServiceImpl extends ServiceBase implements LevelService {
         }
     }
 
-    @Override
     public void addUnlockedLevels(Array<String> unlockedLevels) {
         for (String unlockedLevel : unlockedLevels) {
             addUnlockedLevel(unlockedLevel);

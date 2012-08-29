@@ -8,14 +8,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import org.gameflow.entity.ImageEntity;
+import org.gameflow.screen.Screen2D;
 
 /**
  *
+ * Based on some code from https://code.google.com/p/steigert-libgdx/
  */
 public class Ship2D extends ImageEntity {
 
-    private final float MAX_HORIZONTAL_SPEED = 100;
-    private final float MAX_VERTICAL_SPEED = 100;
+    private final float MAX_HORIZONTAL_SPEED = 200;
+    private final float MAX_VERTICAL_SPEED = 200;
 
     private ParticleEffect engineEffect;
     private final TextureAtlas atlas;
@@ -52,7 +54,7 @@ public class Ship2D extends ImageEntity {
     @Override
     public void update(float timeDelta) {
         moveShip(timeDelta);
-        engineEffect.setPosition(x + width / 2, y);
+        engineEffect.setPosition(x * Screen2D.SCREEN_SIZE_SCALE + width * Screen2D.SCREEN_SIZE_SCALE / 2, y * Screen2D.SCREEN_SIZE_SCALE);
         engineEffect.update(timeDelta);
     }
 
@@ -68,15 +70,11 @@ public class Ship2D extends ImageEntity {
         // check the input and move the ship
         if( Gdx.input.isPeripheralAvailable(Input.Peripheral.Accelerometer) ) {
 
-            // x: 4 (back), 2 (still), 0 (forward)
-            // I'll translate the above values to (-2,0,2) so that my next
-            // calculations are simpler
-            float adjustedX = ( Gdx.input.getAccelerometerX() - 2f );
+            float adjustedX = ( Gdx.input.getAccelerometerX());
             if( adjustedX < - 2f ) adjustedX = - 2f;
             else if( adjustedX > 2f ) adjustedX = 2f;
 
-            // y: -2 (left), 0 (still), 2 (right)
-            float adjustedY = Gdx.input.getAccelerometerY();
+            float adjustedY = Gdx.input.getAccelerometerY() - 3.5f; // When tilted in normal viewing angle, keep rocket still.
             if( adjustedY < - 2f ) adjustedY = - 2f;
             else if( adjustedY > 2f ) adjustedY = 2f;
 
@@ -85,10 +83,8 @@ public class Ship2D extends ImageEntity {
             adjustedX /= 2;
             adjustedY /= 2;
 
-            // notice the inverted axis because the game is displayed in
-            // landscape mode
-            x += ( adjustedY * MAX_HORIZONTAL_SPEED * delta );
-            y += ( - adjustedX * MAX_VERTICAL_SPEED * delta );
+            x += -adjustedX * MAX_HORIZONTAL_SPEED * delta;
+            y += -adjustedY * MAX_VERTICAL_SPEED * delta;
 
         }
 

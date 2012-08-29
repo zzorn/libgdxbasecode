@@ -45,7 +45,7 @@ public class ExampleLevelScreen extends Screen2D {
         table.add(lvl).padBottom(50).colspan(2);
         table.row();
 
-        double order =Math.random();
+        double order = Math.random();
         if (order<0.5) {
             addFailButton(table);
             addWinButton(table);
@@ -100,7 +100,6 @@ public class ExampleLevelScreen extends Screen2D {
 
     private void addWinButton(Table table) {
         table.add(createButton("Win level! :D", new ClickListener() {
-            @Override
             public void click(Actor actor, float x, float y) {
                 game.soundService.play(ExampleGame.Sounds.FOOTFALL);
                 Array<String> nextLevels = game.levelService.levelCompleted(level);
@@ -112,7 +111,6 @@ public class ExampleLevelScreen extends Screen2D {
 
     private void addFailButton(Table table) {
         table.add(createButton("Fail level :~(", new ClickListener() {
-            @Override
             public void click(Actor actor, float x, float y) {
                 game.soundService.play(ExampleGame.Sounds.WHALE);
                 game.setScreen(new MainScreen(game));
