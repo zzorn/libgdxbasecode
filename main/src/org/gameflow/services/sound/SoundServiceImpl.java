@@ -31,7 +31,6 @@ public class SoundServiceImpl extends ServiceBase implements SoundService {
     @Override
     public void create() {
         soundCache.setEntryRemovedListener(new LRUCache.CacheEntryRemovedListener<String, Sound>() {
-            @Override
             public void notifyEntryRemoved(String key, Sound value) {
                 logDebug("Disposing sound: " + key);
                 value.dispose();
@@ -39,12 +38,10 @@ public class SoundServiceImpl extends ServiceBase implements SoundService {
         });
     }
 
-    @Override
     public void play(SoundResourceHandle sound) {
         play(sound.getFileName());
     }
 
-    @Override
     public void play(String soundFileName)
     {
         // Check if the sound is enabled
@@ -63,7 +60,6 @@ public class SoundServiceImpl extends ServiceBase implements SoundService {
         soundToPlay.play( volume );
     }
 
-    @Override
     public void setVolume(float volume) {
         logDebug("Adjusting sound volume to: " + volume);
 
@@ -74,7 +70,6 @@ public class SoundServiceImpl extends ServiceBase implements SoundService {
         this.volume = volume;
     }
 
-    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

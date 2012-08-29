@@ -21,7 +21,6 @@ public class MainScreen extends Screen2D {
         Table table = new Table(getSkin());
 
         table.add(createButton("Start game", new ClickListener() {
-            @Override
             public void click(Actor actor, float x, float y) {
                 game.levelService.startFirstLevel();
                 game.soundService.play(ExampleGame.Sounds.UI_CLICK);
@@ -33,7 +32,6 @@ public class MainScreen extends Screen2D {
 
 
         table.add(createButton("Options", new ClickListener() {
-            @Override
             public void click(Actor actor, float x, float y) {
                 game.setScreen(new OptionsScreen(game));
                 game.soundService.play(ExampleGame.Sounds.UI_CLICK);
@@ -43,7 +41,6 @@ public class MainScreen extends Screen2D {
         table.row();
 
         table.add(createButton("Quit game", new ClickListener() {
-            @Override
             public void click(Actor actor, float x, float y) {
                 game.soundService.play(ExampleGame.Sounds.WHALE);
                 try {

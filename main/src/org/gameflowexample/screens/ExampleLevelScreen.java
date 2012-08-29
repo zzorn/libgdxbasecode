@@ -27,7 +27,6 @@ public class ExampleLevelScreen extends Screen2D {
 
     private ParticleEffect particleEffect;
     private ParticleEffect snowEffect;
-    private TextureAtlas atlas;
     private Ship2D ship2D;
 
     public ExampleLevelScreen(Level level, ExampleGame game) {
@@ -61,7 +60,7 @@ public class ExampleLevelScreen extends Screen2D {
 
         getStage().addActor(table);
 
-        atlas = new TextureAtlas(Gdx.files.internal("images/images.pack"));
+        setAtlas(new TextureAtlas(Gdx.files.internal("images/images.pack")));
         /*
         TextureAtlas.AtlasRegion region = atlas.findRegion("imagename");
         Sprite sprite = atlas.createSprite("otherimagename");
@@ -70,7 +69,7 @@ public class ExampleLevelScreen extends Screen2D {
 
         // Show level start effect
         particleEffect = new ParticleEffect();
-        particleEffect.load(Gdx.files.internal("particles/testparticles.properties"), atlas);
+        particleEffect.load(Gdx.files.internal("particles/testparticles.properties"), getAtlas());
         int w = Gdx.graphics.getWidth();
         int h = Gdx.graphics.getHeight();
         int x = (int)(Math.random() * w);
@@ -81,12 +80,12 @@ public class ExampleLevelScreen extends Screen2D {
         particleEffect.start();
 
         snowEffect = new ParticleEffect();
-        snowEffect.load(Gdx.files.internal("particles/snowstorm.properties"), atlas);
+        snowEffect.load(Gdx.files.internal("particles/snowstorm.properties"), getAtlas());
         snowEffect.setPosition(x, y);
         snowEffect.start();
 
         // Show ship
-        ship2D = new Ship2D(atlas);
+        ship2D = new Ship2D(getAtlas());
         ship2D.x = x;
         ship2D.y = y;
         addEntity(ship2D);
@@ -135,6 +134,6 @@ public class ExampleLevelScreen extends Screen2D {
     protected void onDispose() {
         particleEffect.dispose();
         snowEffect.dispose();
-        atlas.dispose();
+        getAtlas().dispose();
     }
 }

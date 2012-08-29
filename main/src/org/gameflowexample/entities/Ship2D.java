@@ -7,54 +7,60 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import org.gameflow.entity.ImageEntity;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import org.gameflow.entity.Entity;
 import org.gameflow.screen.Screen2D;
 
 /**
  *
  * Based on some code from https://code.google.com/p/steigert-libgdx/
  */
-public class Ship2D extends ImageEntity {
+public class Ship2D extends Entity {
 
     private final float MAX_HORIZONTAL_SPEED = 200;
     private final float MAX_VERTICAL_SPEED = 200;
+    private final float SCREEN_SIZE_SCALE = 1;
 
     private ParticleEffect engineEffect;
-    private final TextureAtlas atlas;
+    private final Image image;
 
+    public float x;
+    public float y;
+    public float width = 32;
+    public float height = 64;
 
     public Ship2D(TextureAtlas atlas) {
-        super(atlas.findRegion("mushroomrocket"));
-        this.atlas = atlas;
-        touchable = false;
+        image = new Image(atlas.findRegion("mushroomrocket"));
     }
 
 
     @Override
-    public Actor create() {
+    protected void onCreate(TextureAtlas atlas) {
 
         // Create particle effect for engine
         engineEffect = new ParticleEffect();
         engineEffect.load(Gdx.files.internal("particles/ion_engine.properties"), atlas);
         engineEffect.start();
 
-        return this;
     }
 
     @Override
-    public void dispose() {
+    public void onDispose() {
         engineEffect.dispose();
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch) {
+    public void render(TextureAtlas atlas, SpriteBatch spriteBatch) {
         engineEffect.draw(spriteBatch);
+        image.x = x;
+        image.y = y;
+        image.draw(spriteBatch, 1);
     }
 
     @Override
     public void update(float timeDelta) {
         moveShip(timeDelta);
-        engineEffect.setPosition(x * Screen2D.SCREEN_SIZE_SCALE + width * Screen2D.SCREEN_SIZE_SCALE / 2, y * Screen2D.SCREEN_SIZE_SCALE);
+        engineEffect.setPosition(x * SCREEN_SIZE_SCALE + width * SCREEN_SIZE_SCALE / 2, y * SCREEN_SIZE_SCALE);
         engineEffect.update(timeDelta);
     }
 
@@ -96,9 +102,9 @@ public class Ship2D extends ImageEntity {
 
         // make sure the ship is inside the stage
         if( x < 0 ) x = 0;
-        else if( x > stage.width() - width ) x = stage.width() - width;
+        else if( x > Gdx.graphics.getWidth() - width ) x = Gdx.graphics.getWidth() - width;
         if( y < 0 ) y = 0;
-        else if( y > stage.height() - height ) y = stage.height() - height;
+        else if( y > Gdx.graphics.getHeight() - height ) y = Gdx.graphics.getHeight() - height;
     }
 
 }

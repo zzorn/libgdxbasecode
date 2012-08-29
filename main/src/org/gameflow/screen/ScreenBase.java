@@ -7,6 +7,9 @@ public abstract class ScreenBase implements Screen {
 
     private final String id;
 
+    private boolean created = false;
+    private boolean disposed = false;
+
     /**
      * @param id an unique id for this screen.
      */
@@ -19,31 +22,50 @@ public abstract class ScreenBase implements Screen {
         }
     }
 
-    @Override
+    public boolean isCreated() {
+        return created;
+    }
+
+    public boolean isDisposed() {
+        return disposed;
+    }
+
     public final String getId() {
         return id;
     }
 
 
-    @Override
+
+    public final void create() {
+        if (!created) {
+            created = true;
+            doCreate();
+        }
+    }
+
+    protected abstract void doCreate();
+
     public void resize(int width, int height) {}
 
-    @Override
     public void update(float deltaSeconds) {}
 
-    @Override
     public void render() {}
 
-    @Override
     public void show() {}
 
-    @Override
     public void hide() {}
 
-    @Override
     public void pause() {}
 
-    @Override
     public void resume() {}
 
+    public final void dispose() {
+        if (created && !disposed) {
+            disposed = true;
+            doDispose();
+        }
+
+    }
+
+    protected abstract void doDispose();
 }
