@@ -8,12 +8,20 @@ public class MathTools {
     public static final double Tau = Math.PI * 2;
     public static final float TauFloat = (float) Tau;
 
+    public static float mix(float t, float start, float end) {
+        return start * (1.0f - t) + end * t;
+    }
+
     public static double mix(double t, double start, double end) {
         return start * (1.0 - t) + end * t;
     }
 
     public static double mixAndClamp(double t, double start, double end) {
         return clamp(start * (1.0 - t) + end * t, start, end);
+    }
+
+    public static float mixAndClamp(float t, float start, float end) {
+        return clamp(start * (1.0f - t) + end * t, start, end);
     }
 
     public static double relPos(double t, double start, double end) {
@@ -34,6 +42,12 @@ public class MathTools {
 
     public static float toDegrees(double angle) {
         return (float)(360.0 * angle / Tau);
+    }
+
+    public static int clamp(int value, int min, int max) {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
     }
 
     public static float clamp(float value, float min, float max) {
