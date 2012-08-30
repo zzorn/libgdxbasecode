@@ -18,6 +18,7 @@ import java.util.Random;
  */
 public class GraphicsEditScreen extends Screen2D {
 
+    private static final int SIZE = 256;
     private Texture texture;
     //private Pixmap pixmap;
     private Random random = new Random();
@@ -28,7 +29,7 @@ public class GraphicsEditScreen extends Screen2D {
     @Override
     protected void onCreate() {
         //pixmap = new Pixmap(64, 64, Pixmap.Format.RGBA8888);
-        pic = new Pic(256, 256, true, true);
+        pic = new Pic(SIZE, SIZE, true, true);
 
         /*
         for (int i = 0; i < 64; i++) {
@@ -75,9 +76,12 @@ public class GraphicsEditScreen extends Screen2D {
         time += deltaSeconds;
         pic.clearToColor(Color.BLUE);
 
-        pic.drawOval(100, 140, 250, 110, time / 20, new SimpleGradient(Color.YELLOW, Color.RED));
-        pic.drawOval(23, 34, 123, 87, time / 17, new SimpleGradient(Color.YELLOW, Color.PINK));
-        pic.drawOval(43, 154, 75, 37, time / 12, new SimpleGradient(Color.YELLOW, Color.ORANGE));
+        random.setSeed(232);
+        float scale = SIZE * 0.8f;
+        for (int i = 0; i < 40; i++) {
+            pic.drawOval(random.nextInt(SIZE), random.nextInt(SIZE), random.nextFloat() * scale, random.nextFloat() * scale, time * (float) random.nextGaussian(), new SimpleGradient(Color.YELLOW, Color.RED));
+            scale *= 0.97f;
+        }
 
 
         Gdx.gl.glTexSubImage2D(GL10.GL_TEXTURE_2D, 0, 0, 0, width, height,
