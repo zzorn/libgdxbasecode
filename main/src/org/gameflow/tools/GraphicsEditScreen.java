@@ -19,6 +19,8 @@ import java.util.Random;
 public class GraphicsEditScreen extends Screen2D {
 
     private static final int SIZE = 256;
+    private static final Color MID_COLOR = new Color(0.8f, 0.7f, 0.5f, 1);
+    private static final Color EDGE_COLOR = new Color(0.3f, 0.2f, 0.3f, 1f);
     private Texture texture;
     //private Pixmap pixmap;
     private Random random = new Random();
@@ -74,12 +76,21 @@ public class GraphicsEditScreen extends Screen2D {
         //pixmap.drawPixel(random.nextInt(width), random.nextInt(height), Color.PINK.toIntBits());
 
         time += deltaSeconds;
-        pic.clearToColor(Color.BLUE);
+        pic.clearToColor(Color.ORANGE);
+
+        BlobEffect blobEffect = new BlobEffect();
+        blobEffect.setSize(100, 100);
+        blobEffect.getNoiseScale(0.95f);
+        blobEffect.setUseBlending(false);
+        blobEffect.setGradient(new SimpleGradient(MID_COLOR, EDGE_COLOR));
 
         random.setSeed(232);
-        float scale = SIZE * 0.8f;
-        for (int i = 0; i < 40; i++) {
-            pic.drawOval(random.nextInt(SIZE), random.nextInt(SIZE), random.nextFloat() * scale, random.nextFloat() * scale, time * (float) random.nextGaussian(), new SimpleGradient(Color.YELLOW, Color.RED));
+        float scale = 1.2f;
+        for (int i = 0; i < 50; i++) {
+            blobEffect.setSeed(i + 100);
+            pic.drawEffect(blobEffect, random.nextInt(SIZE), random.nextInt(SIZE),
+                    random.nextFloat() * scale + scale * 0.5f,
+                    random.nextFloat() * scale + scale * 0.5f, false, false, time * (float) random.nextGaussian() * 0.1f);
             scale *= 0.97f;
         }
 

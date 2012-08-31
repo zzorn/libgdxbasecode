@@ -3,6 +3,7 @@ package org.gameflow.tools;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,8 +22,10 @@ public class Pic {
 
     private Map<String, Channel> channels = null;
 
-    boolean wrapVertically = false;
-    boolean wrapHorizontally = false;
+    private Array<PicEffect> effects = new Array<PicEffect>();
+
+    boolean wrapVertically = true;
+    boolean wrapHorizontally = true;
 
     public Pic(int width, int height) {
         this(width, height, false, false);
@@ -92,6 +95,20 @@ public class Pic {
         pixmap.fill();
     }
 
+    public void addEffect(PicEffect effect) {
+        effects.add(effect);
+    }
+
+    public void removeEffect(PicEffect effect) {
+        effects.removeValue(effect, true);
+    }
+
+    public void drawEffects() {
+        for (PicEffect effect : effects) {
+            drawEffect(effect, getWidth() / 2, getHeight() / 2, 1, 1, false, false, 0, 0, 0, 0);
+        }
+    }
+
     /**
      * @param pixmap
      * @return true if the picture was wrapped.
@@ -130,41 +147,99 @@ public class Pic {
         return wrapRight || wrapLeft || wrapDown || wrapUp;
     }
 
+    public boolean drawEffect(PicEffect effect) {
+        return drawEffect(effect, pixmap.getWidth()/2, pixmap.getHeight()/2, 1, 1, false, false, 0, 0,0,0);
+    }
+
+    public boolean drawEffect(PicEffect effect,
+                              float x, float y) {
+        return drawEffect(effect,x, y, 1, 1, false, false, 0, 0,0,0);
+    }
+
+    public boolean drawEffect(PicEffect effect,
+                              float x, float y,
+                              float scale) {
+        return drawEffect(effect,x, y, scale, scale, false, false, 0, 0,0,0);
+    }
+
+    public boolean drawEffect(PicEffect effect,
+                              float x, float y,
+                              float scaleX, float scaleY) {
+        return drawEffect(effect,x, y, scaleX, scaleY, false, false, 0, 0,0,0);
+    }
+
+    public boolean drawEffect(PicEffect effect,
+                              float x, float y,
+                              float scaleX, float scaleY,
+                              boolean flipX, boolean flipY) {
+        return drawEffect(effect,x, y, scaleX, scaleY, flipX, flipY, 0, 0,0,0);
+    }
+
+    public boolean drawEffect(PicEffect effect,
+                              float x, float y,
+                              float scaleX, float scaleY,
+                              boolean flipX, boolean flipY,
+                              float direction) {
+        return drawEffect(effect,x, y, scaleX, scaleY, flipX, flipY, direction, 0,0,0);
+    }
+
     /**
-     * Draws a sphere on the pixmap.
-     */
-    public void drawOval(float x, float y, float rx, float ry, float direction, Gradient gradient) {
-        if (rx > 0 && ry > 0) {
-            int r = (int) Math.max(rx, ry) + 1;
+    * Draws an effect on the pixmap.
+    */
+    public boolean drawEffect(PicEffect effect,
+                           float x, float y,
+                           float scaleX, float scaleY,
+                           boolean flipX, boolean flipY,
+                           float direction,
+                           float hueDelta, float satDelta, float lumDelta) {
+        if (scaleX > 0 && scaleX > 0) {
+            float effectW = effect.getW();
+            float effectH = effect.getH();
+
+            // TODO: Adjust bounding box for rotation
+            float sizeX = effectW * scaleX;
+            float sizeY = effectH * scaleY;
+            int r = (int) Math.max(sizeX, sizeY) + 1;
             int x1 = (int) x - r;
             int y1 = (int) y - r;
             int x2 = (int) x + r;
             int y2 = (int) y + r;
 
-            int w = getWidth();
-            int h = getHeight();
             boolean wrapRight = wrapRight(x1, x2);
             boolean wrapLeft  = wrapLeft(x1, x2);
             boolean wrapUp    = wrapUp(y1, y2);
             boolean wrapDown  = wrapDown(y1, y2);
 
             Pixmap.Blending oldBlending = Pixmap.getBlending();
-            Pixmap.setBlending(Pixmap.Blending.None);
+            if (effect.getUseBlending()) {
+                Pixmap.setBlending(Pixmap.Blending.SourceOver);
+            }
+            else {
+                Pixmap.setBlending(Pixmap.Blending.None);
+            }
 
+            int w = getWidth();
+            int h = getHeight();
 
-            if (wrapDown && wrapRight) drawOvalOnce(x + w, y + h, rx, ry, direction, gradient);
-            if (wrapDown)              drawOvalOnce(x,     y + h, rx, ry, direction, gradient);
-            if (wrapDown && wrapLeft)  drawOvalOnce(x - w, y + h, rx, ry, direction, gradient);
+            boolean b = false;
+            if (wrapDown && wrapRight) b = b || effect.draw(pixmap, x + w, y + h, scaleX, scaleY, flipX, flipY, direction, hueDelta, satDelta, lumDelta);
+            if (wrapDown)              b = b || effect.draw(pixmap, x    , y + h, scaleX, scaleY, flipX, flipY, direction, hueDelta, satDelta, lumDelta);
+            if (wrapDown && wrapLeft)  b = b || effect.draw(pixmap, x - w, y + h, scaleX, scaleY, flipX, flipY, direction, hueDelta, satDelta, lumDelta);
 
-            if (wrapRight)             drawOvalOnce(x + w, y, rx, ry, direction, gradient);
-                                       drawOvalOnce(x,     y, rx, ry, direction, gradient);
-            if (wrapLeft)              drawOvalOnce(x - w, y, rx, ry, direction, gradient);
+            if (wrapRight)             b = b || effect.draw(pixmap, x + w, y    , scaleX, scaleY, flipX, flipY, direction, hueDelta, satDelta, lumDelta);
+                                                effect.draw(pixmap, x, y, scaleX, scaleY, flipX, flipY, direction, hueDelta, satDelta, lumDelta);
+            if (wrapLeft)              b = b || effect.draw(pixmap, x - w, y    , scaleX, scaleY, flipX, flipY, direction, hueDelta, satDelta, lumDelta);
 
-            if (wrapUp && wrapRight)   drawOvalOnce(x + w, y - h, rx, ry, direction, gradient);
-            if (wrapUp)                drawOvalOnce(x,     y - h, rx, ry, direction, gradient);
-            if (wrapUp && wrapLeft)    drawOvalOnce(x - w, y - h, rx, ry, direction, gradient);
+            if (wrapUp && wrapRight)   b = b || effect.draw(pixmap, x + w, y - h, scaleX, scaleY, flipX, flipY, direction, hueDelta, satDelta, lumDelta);
+            if (wrapUp)                b = b || effect.draw(pixmap, x    , y - h, scaleX, scaleY, flipX, flipY, direction, hueDelta, satDelta, lumDelta);
+            if (wrapUp && wrapLeft)    b = b || effect.draw(pixmap, x - w, y - h, scaleX, scaleY, flipX, flipY, direction, hueDelta, satDelta, lumDelta);
 
             Pixmap.setBlending(oldBlending);
+
+            return b;
+        }
+        else {
+            return false;
         }
     }
 
@@ -184,40 +259,5 @@ public class Pic {
         return wrapHorizontally && x1 < 0 && x2 >= 0;
     }
 
-    private void drawOvalOnce(float x, float y, float rx, float ry, float direction, Gradient gradient) {
-        if (rx > 0 && ry > 0) {
-            final float angle = TauFloat * direction;
-            float cosA = MathUtils.cos(angle);
-            float sinA = MathUtils.sin(angle);
-
-            int r = (int) Math.max(rx, ry) + 1;
-
-            int x1 = clamp((int) x - r, 0, getWidth());
-            int y1 = clamp((int) y - r, 0, getHeight());
-            int x2 = clamp((int) x + r, 0, getWidth());
-            int y2 = clamp((int) y + r, 0, getHeight());
-
-            float rxSqr = rx*rx;
-            float rySqr = ry*ry;
-            for (int ty = y1; ty < y2; ty++) {
-                for (int tx = x1; tx < x2; tx++) {
-                    float tdx = tx - x;
-                    float tdy = ty - y;
-                    float dx = (tdx * cosA - tdy * sinA);
-                    float dy = (tdx * sinA + tdy * cosA);
-                    float xDistSqr = dx*dx;
-                    float yDistSqr = dy*dy;
-                    float relXDist = xDistSqr / rxSqr;
-                    float relYDist = yDistSqr / rySqr;
-                    float d = relXDist + relYDist;
-                    if (d <= 1) {
-                        int color = gradient.getColor(d);
-                        pixmap.drawPixel(tx, ty, color);
-                    }
-                }
-            }
-
-        }
-    }
 
 }
