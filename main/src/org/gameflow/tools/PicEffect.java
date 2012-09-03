@@ -1,6 +1,10 @@
 package org.gameflow.tools;
 
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.Matrix3;
+import com.badlogic.gdx.utils.Array;
+import org.gameflow.tools.graphics.Wrap;
+import org.gameflow.tools.raster.Raster;
 
 /**
  *
@@ -32,5 +36,16 @@ public interface PicEffect {
                  boolean flipX, boolean flipY,
                  float direction,
                  float hueDelta, float satDelta, float lumDelta);
+
+    /**
+     * @param raster target to render to.
+     * @param translation translation to apply to the render effect.
+     * @param wrapsNotToTouch edges that should not be overlapped.
+     * @param wrapToTouch edges that must be touched.
+     */
+    void draw(Raster raster,
+              Matrix3 translation,
+              Array<Wrap> wrapsNotToTouch,
+              Wrap wrapToTouch);
 
 }
