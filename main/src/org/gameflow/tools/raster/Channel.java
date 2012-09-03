@@ -1,11 +1,11 @@
-package org.gameflow.tools;
+package org.gameflow.tools.raster;
 
 import org.gameflow.utils.ParameterChecker;
 
 /**
  *
  */
-public class Channel {
+public final class Channel {
     private final int width;
     private final int height;
     private final float data[];
@@ -19,5 +19,12 @@ public class Channel {
         data = new float[width * height];
     }
 
+    public float getPixel(int x, int y) {
+        return data[x + y * width];
+    }
+
+    public void setPixel(int x, int y, float value) {
+        data[x + y * width] = value;
+    }
 
 }

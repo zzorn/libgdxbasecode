@@ -2,13 +2,11 @@ package org.gameflow.tools;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
+import org.gameflow.tools.raster.Channel;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.gameflow.utils.MathTools.*;
 import static org.gameflow.utils.MathTools.clamp;
 
 /**
@@ -21,8 +19,6 @@ public class Pic {
     private final Pixmap pixmap;
 
     private Map<String, Channel> channels = null;
-
-    private Array<PicEffect> effects = new Array<PicEffect>();
 
     boolean wrapVertically = true;
     boolean wrapHorizontally = true;
@@ -93,20 +89,6 @@ public class Pic {
     public void clearToColor(Color color) {
         pixmap.setColor(color);
         pixmap.fill();
-    }
-
-    public void addEffect(PicEffect effect) {
-        effects.add(effect);
-    }
-
-    public void removeEffect(PicEffect effect) {
-        effects.removeValue(effect, true);
-    }
-
-    public void drawEffects() {
-        for (PicEffect effect : effects) {
-            drawEffect(effect, getWidth() / 2, getHeight() / 2, 1, 1, false, false, 0, 0, 0, 0);
-        }
     }
 
     /**
