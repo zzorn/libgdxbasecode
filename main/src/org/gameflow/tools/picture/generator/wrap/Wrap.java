@@ -1,18 +1,19 @@
-package org.gameflow.tools.graphics;
+package org.gameflow.tools.picture.generator.wrap;
 
 import com.badlogic.gdx.utils.Array;
-import org.gameflow.tools.PicEffect;
 
 /**
  * A wrap containing one or more edges that wrap together, and a list of effects that overlap the wrap edge.
  */
 public class Wrap {
 
+    private final String name;
+    private long seed;
     private final Edge initialEdge;
     private Array<WrapEdge> edges = new Array<WrapEdge>();
-    private Array<PicEffect> wrapEffects = new Array<PicEffect>();
 
-    public Wrap(Edge initialEdge, Edge... additionalEdges) {
+    public Wrap(String name, Edge initialEdge, Edge... additionalEdges) {
+        this.name = name;
         this.initialEdge = initialEdge;
         edges.add(new WrapEdge(initialEdge));
 
@@ -33,15 +34,19 @@ public class Wrap {
         return edges;
     }
 
-    public void addWrapEffect(PicEffect effect) {
-        wrapEffects.add(effect);
+    public long getSeed() {
+        return seed;
     }
 
-    public void removeWrapEffect(PicEffect effect) {
-        wrapEffects.removeValue(effect, true);
+    public void setSeed(long seed) {
+        this.seed = seed;
     }
 
-    public Array<PicEffect> getWrapEffects() {
-        return wrapEffects;
+    public String getName() {
+        return name;
+    }
+
+    public Edge getInitialEdge() {
+        return initialEdge;
     }
 }

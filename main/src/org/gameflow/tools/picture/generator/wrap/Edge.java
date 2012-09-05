@@ -1,4 +1,4 @@
-package org.gameflow.tools.graphics;
+package org.gameflow.tools.picture.generator.wrap;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;

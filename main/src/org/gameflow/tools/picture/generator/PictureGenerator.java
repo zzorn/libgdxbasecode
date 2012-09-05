@@ -1,14 +1,13 @@
-package org.gameflow.tools.graphics;
+package org.gameflow.tools.picture.generator;
 
 import com.badlogic.gdx.utils.Array;
-import org.gameflow.tools.Picture;
-import org.gameflow.tools.raster.Raster;
+import org.gameflow.tools.picture.Picture;
 
 /**
  * Generates one or more pictures, possibly based on some templates.
  */
 public interface PictureGenerator {
 
-    Array<Raster> generatePictures();
+    Array<Picture> generatePictures();
 
 }

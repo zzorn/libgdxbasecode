@@ -2,7 +2,8 @@ package org.gameflow.tools;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import org.gameflow.tools.raster.Channel;
+import org.gameflow.tools.picture.effect.PictureEffect;
+import org.gameflow.tools.picture.Channel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +56,7 @@ public class Pic {
     public Channel addChannel(String name) {
         if (channels == null) channels = new HashMap<String, Channel>();
 
-        Channel channel = new Channel(getWidth(), getHeight());
+        Channel channel = new Channel(name, getWidth(), getHeight());
 
         channels.put(name, channel);
 
@@ -129,35 +130,35 @@ public class Pic {
         return wrapRight || wrapLeft || wrapDown || wrapUp;
     }
 
-    public boolean drawEffect(PicEffect effect) {
+    public boolean drawEffect(PictureEffect effect) {
         return drawEffect(effect, pixmap.getWidth()/2, pixmap.getHeight()/2, 1, 1, false, false, 0, 0,0,0);
     }
 
-    public boolean drawEffect(PicEffect effect,
+    public boolean drawEffect(PictureEffect effect,
                               float x, float y) {
         return drawEffect(effect,x, y, 1, 1, false, false, 0, 0,0,0);
     }
 
-    public boolean drawEffect(PicEffect effect,
+    public boolean drawEffect(PictureEffect effect,
                               float x, float y,
                               float scale) {
         return drawEffect(effect,x, y, scale, scale, false, false, 0, 0,0,0);
     }
 
-    public boolean drawEffect(PicEffect effect,
+    public boolean drawEffect(PictureEffect effect,
                               float x, float y,
                               float scaleX, float scaleY) {
         return drawEffect(effect,x, y, scaleX, scaleY, false, false, 0, 0,0,0);
     }
 
-    public boolean drawEffect(PicEffect effect,
+    public boolean drawEffect(PictureEffect effect,
                               float x, float y,
                               float scaleX, float scaleY,
                               boolean flipX, boolean flipY) {
         return drawEffect(effect,x, y, scaleX, scaleY, flipX, flipY, 0, 0,0,0);
     }
 
-    public boolean drawEffect(PicEffect effect,
+    public boolean drawEffect(PictureEffect effect,
                               float x, float y,
                               float scaleX, float scaleY,
                               boolean flipX, boolean flipY,
@@ -168,7 +169,7 @@ public class Pic {
     /**
     * Draws an effect on the pixmap.
     */
-    public boolean drawEffect(PicEffect effect,
+    public boolean drawEffect(PictureEffect effect,
                            float x, float y,
                            float scaleX, float scaleY,
                            boolean flipX, boolean flipY,

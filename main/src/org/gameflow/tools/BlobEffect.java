@@ -3,6 +3,7 @@ package org.gameflow.tools;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
+import org.gameflow.tools.picture.effect.PictureEffectBase;
 import org.gameflow.utils.SimplexGradientNoise;
 
 import java.util.Random;
@@ -13,7 +14,7 @@ import static org.gameflow.utils.MathTools.clamp;
 /**
  *
  */
-public class BlobEffect extends PicEffectBase {
+public class BlobEffect extends PictureEffectBase {
 
     private float noiseAmount = 0.5f;
     private float noiseScaleX = 0.1f;

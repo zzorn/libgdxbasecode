@@ -1,13 +1,14 @@
-package org.gameflow.tools.raster;
+package org.gameflow.tools.picture;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectIntMap;
+import org.gameflow.tools.picture.sampler.ChannelSampler;
 
 /**
  *
  */
-public class RasterImpl implements Raster {
+public class PictureImpl implements Picture {
 
     private final int width;
     private final int height;
@@ -15,13 +16,9 @@ public class RasterImpl implements Raster {
     private ObjectIntMap<String> channelIds = new ObjectIntMap<String>();
     private Array<Channel> channels = new Array<Channel>();
 
-    private final Pixmap pixmap;
-
-    public RasterImpl(int width, int height) {
+    public PictureImpl(int width, int height) {
         this.width = width;
         this.height = height;
-
-        pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
     }
 
     public int getWidth() {
@@ -36,7 +33,7 @@ public class RasterImpl implements Raster {
         if (channelIds.containsKey(channelName)) throw new IllegalArgumentException("A channel with the name '"+channelName+"' already exists.");
 
         int id = channels.size;
-        channels.add(new Channel(width, height));
+        channels.add(new Channel(channelName, width, height));
         channelIds.put(channelName, id);
         return id;
     }
@@ -57,23 +54,12 @@ public class RasterImpl implements Raster {
         return getChannel(getChannelId(channelName));
     }
 
-    public Pixmap getPixmap() {
-        return pixmap;
+    public Array<Channel> getChannels() {
+        return channels;
     }
 
-    public int getPixelColor(int x, int y) {
-        return pixmap.getPixel(x, y);
+    public Array<? extends ChannelSampler> getChannelSamplers() {
+        return channels;
     }
 
-    public void setPixelColor(int x, int y, int rgba) {
-        pixmap.drawPixel(x, y, rgba);
-    }
-
-    public float getPixelChannel(int channel, int x, int y) {
-        return channels.get(channel).getPixel(x, y);
-    }
-
-    public void setPixelChannel(int channel, int x, int y, float value) {
-        channels.get(channel).setPixel(x, y, value);
-    }
 }

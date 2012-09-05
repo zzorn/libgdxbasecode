@@ -1,15 +1,14 @@
-package org.gameflow.tools;
+package org.gameflow.tools.picture.effect;
 
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.utils.Array;
-import org.gameflow.tools.graphics.Wrap;
-import org.gameflow.tools.raster.Raster;
+import org.gameflow.tools.picture.Picture;
+import org.gameflow.tools.picture.generator.wrap.Wrap;
 
 /**
- *
+ * Draws something on a picture, or processes it in some way.
  */
-public interface PicEffect {
+public interface PictureEffect {
 
     boolean getUseBlending();
 
@@ -38,14 +37,12 @@ public interface PicEffect {
                  float hueDelta, float satDelta, float lumDelta);
 
     /**
-     * @param raster target to render to.
-     * @param translation translation to apply to the render effect.
-     * @param wrapsNotToTouch edges that should not be overlapped.
-     * @param wrapToTouch edges that must be touched.
+     * @param picture target to render to.
+     * @param wrapsInPicture edges that are in the picture we draw on.
+     * @param seed a random seed for this drawing
      */
-    void draw(Raster raster,
-              Matrix3 translation,
-              Array<Wrap> wrapsNotToTouch,
-              Wrap wrapToTouch);
+    void draw(Picture picture,
+              Array<Wrap> wrapsInPicture,
+              long seed);
 
 }
