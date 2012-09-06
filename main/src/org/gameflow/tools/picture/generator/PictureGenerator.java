@@ -8,6 +8,8 @@ import org.gameflow.tools.picture.Picture;
  */
 public interface PictureGenerator {
 
+    String getName();
+
     Array<Picture> generatePictures();
 
 }

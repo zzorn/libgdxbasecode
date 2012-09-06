@@ -1,6 +1,7 @@
 package org.gameflow.tools.picture;
 
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectIntMap;
 import org.gameflow.tools.picture.sampler.PictureSampler;
 
@@ -9,11 +10,14 @@ import org.gameflow.tools.picture.sampler.PictureSampler;
  */
 public interface Picture extends PictureSampler {
 
+    int getWidth();
+    int getHeight();
+
     int addChannel(String channelName);
     Channel getChannel(String channelName);
 
     int getChannelId(String channelName);
-    ObjectIntMap.Entries<String> getChannelIds();
     Channel getChannel(int channelId);
 
+    Array<Channel> getChannels();
 }

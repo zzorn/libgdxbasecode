@@ -1,6 +1,7 @@
 package org.gameflow.tools.picture.blender;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.FloatArray;
 
 /**
  * Used to blend a source picture on top of a target picture one pixel at a time.
@@ -16,6 +17,6 @@ public interface Blender {
     /**
      * Updates the target channel values for this pixel based on the source channel values.
      */
-    void blend(float[] targetChannelValues, float[] sourceChannelValues);
+    void blend(FloatArray targetChannelValues, FloatArray sourceChannelValues);
 
 }

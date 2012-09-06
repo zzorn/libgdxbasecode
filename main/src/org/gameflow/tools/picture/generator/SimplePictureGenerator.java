@@ -2,6 +2,7 @@ package org.gameflow.tools.picture.generator;
 
 import com.badlogic.gdx.utils.Array;
 import org.gameflow.tools.picture.Picture;
+import org.gameflow.tools.picture.PictureImpl;
 import org.gameflow.tools.picture.effect.PictureEffect;
 
 /**
@@ -23,14 +24,21 @@ public class SimplePictureGenerator extends PictureGeneratorBase {
         effects.removeValue(effect, true);
     }
 
-    public void renderPicture(Picture picture) {
-        for (PictureEffect effect : effects) {
-            //drawEffect(effect, getWidth() / 2, getHeight() / 2, 1, 1, false, false, 0, 0, 0, 0);
-        }
-    }
-
     public Array<Picture> generatePictures() {
-        // TODO
+        Array<Picture> pictures = new Array<Picture>();
 
+        // Create pictures
+        for (int i = 0; i < getNumber(); i++) {
+            PictureImpl picture = new PictureImpl(getWidth(), getHeight());
+
+            // Draw effects
+            for (PictureEffect effect : effects) {
+                effect.draw(picture, null, getRandomSeed());
+            }
+
+            pictures.add(picture);
+        }
+
+        return pictures;
     }
 }

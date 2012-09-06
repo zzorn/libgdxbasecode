@@ -11,12 +11,6 @@ import org.gameflow.tools.picture.generator.PictureGeneratorBase;
  */
 public class WrapPictureGenerator extends PictureGeneratorBase {
 
-    private String name;
-    private int number;
-    private int width;
-    private int height;
-    private long seed;
-
     private Array<PictureEffect> effects = new Array<PictureEffect>();
     private Array<Wrap> wraps = new Array<Wrap>();
 
@@ -24,12 +18,12 @@ public class WrapPictureGenerator extends PictureGeneratorBase {
         Array<Picture> pictures = new Array<Picture>();
 
         // Create pictures
-        for (int i = 0; i < number; i++) {
-            PictureImpl picture = new PictureImpl(width, height);
+        for (int i = 0; i < getNumber(); i++) {
+            PictureImpl picture = new PictureImpl(getWidth(), getHeight());
 
             // Draw effects
             for (PictureEffect effect : effects) {
-                effect.draw(picture, wraps, seed);
+                effect.draw(picture, wraps, getRandomSeed());
             }
 
             pictures.add(picture);
@@ -38,11 +32,5 @@ public class WrapPictureGenerator extends PictureGeneratorBase {
         return pictures;
     }
 
-    public long getSeed() {
-        return seed;
-    }
 
-    public void setSeed(long seed) {
-        this.seed = seed;
-    }
 }
