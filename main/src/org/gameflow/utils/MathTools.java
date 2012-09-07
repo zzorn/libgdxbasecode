@@ -16,19 +16,19 @@ public final class MathTools {
     public static final float TauFloat = (float) Tau;
 
     public static float mix(float t, float start, float end) {
-        return start * (1.0f - t) + end * t;
+        return start + t * (end - start);
     }
 
     public static double mix(double t, double start, double end) {
-        return start * (1.0 - t) + end * t;
+        return start + t * (end - start);
     }
 
     public static double mixAndClamp(double t, double start, double end) {
-        return clamp(start * (1.0 - t) + end * t, start, end);
+        return clamp(start + t * (end - start), start, end);
     }
 
     public static float mixAndClamp(float t, float start, float end) {
-        return clamp(start * (1.0f - t) + end * t, start, end);
+        return clamp(start + t * (end - start), start, end);
     }
 
     public static double relPos(double t, double start, double end) {
