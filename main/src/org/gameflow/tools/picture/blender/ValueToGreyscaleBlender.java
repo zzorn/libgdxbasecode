@@ -23,11 +23,11 @@ public final class ValueToGreyscaleBlender extends BlenderBase {
         alphaChan = getTargetChannel("alpha");
     }
 
-    public void blend(FloatArray targetChannelValues, FloatArray sourceChannelValues) {
-        float value = sourceChannelValues.get(valueChan);
-        targetChannelValues.set(redChan, value);
-        targetChannelValues.set(greenChan, value);
-        targetChannelValues.set(blueChan, value);
-        targetChannelValues.set(alphaChan, 1);
+    public void blend(float[] targetChannelValues, float[] sourceChannelValues) {
+        float value = sourceChannelValues[valueChan];
+        targetChannelValues[redChan]   = value;
+        targetChannelValues[greenChan] = value;
+        targetChannelValues[blueChan]  = value;
+        targetChannelValues[alphaChan] = 1;
     }
 }

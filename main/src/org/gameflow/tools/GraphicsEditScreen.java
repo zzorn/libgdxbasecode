@@ -11,10 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.tablelayout.Table;
 import com.badlogic.gdx.utils.Array;
 import org.gameflow.screen.Screen2D;
 import org.gameflow.tools.picture.Picture;
+import org.gameflow.tools.picture.blender.GradientBlender;
+import org.gameflow.tools.picture.blender.ValueToGreyscaleBlender;
 import org.gameflow.tools.picture.effect.PasteEffect;
 import org.gameflow.tools.picture.exporter.PixmapExporter;
 import org.gameflow.tools.picture.generator.PictureGenerator;
 import org.gameflow.tools.picture.generator.SimplePictureGenerator;
+import org.gameflow.tools.picture.gradient.*;
+import org.gameflow.tools.picture.gradient.Gradient;
 import org.gameflow.tools.picture.sampler.ConstantChannel;
 import org.gameflow.tools.picture.sampler.NoiseChannel;
 import org.gameflow.tools.picture.sampler.SampledPicture;
@@ -61,7 +65,20 @@ public class GraphicsEditScreen extends Screen2D {
     private SimplePictureGenerator createPictureGenerator() {
         SimplePictureGenerator generator = new SimplePictureGenerator("TestPic", 256, 256, 4, 142);
 
-        generator.addEffect(new PasteEffect(new SampledPicture("value", new NoiseChannel(2, 2, 6f, 0.6f, 0.7f, 142, 242))));
+        Gradient gradient = new Gradient("red", "green", "blue", "alpha");
+        gradient.addPoint(0.0, 0, 0, 0, 1);
+        gradient.addPoint(0.2, 1, 0, 0, 1);
+        gradient.addPoint(0.4, 1, 1, 0, 1);
+        gradient.addPoint(0.6, 1, 0, 1, 1);
+        gradient.addPoint(0.8, 0, 0, 1, 1);
+        gradient.addPoint(1.0, 0, 1, 1, 1);
+
+        System.out.println(gradient);
+        System.out.println("gradient.getChannelValue(\"red\", 0.5f) = " + gradient.getChannelValue("red", 0.5f));
+
+        GradientBlender blender = new GradientBlender(gradient);
+        NoiseChannel noiseChannel = new NoiseChannel(2, 2, 6f, 1f, 0.5f, 142, 242);
+        generator.addEffect(new PasteEffect(new SampledPicture("value", noiseChannel), blender));
 
 //        SampledPicture pic = new SampledPicture();
 //        pic.addChannel("value", new ConstantChannel(0.5f));

@@ -3,21 +3,26 @@ package org.gameflow.tools.picture.blender;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 
+import java.util.List;
+
 /**
  *
  */
 public abstract class BlenderBase implements Blender {
-    private Array<String> targetChannelNames;
-    private Array<String> sourceChannelNames;
+    private List<String> targetChannelNames;
+    private List<String> sourceChannelNames;
 
-    public final void initChannels(Array<String> targetChannelNames,
-                             Array<String> sourceChannelNames) {
+    public final void initChannels(List<String> targetChannelNames,
+                                   List<String> sourceChannelNames) {
         this.targetChannelNames = targetChannelNames;
         this.sourceChannelNames = sourceChannelNames;
 
         onInit();
     }
 
+    /**
+     * Called when the blender has been notified of the source and target channel names that will be used next.
+     */
     protected void onInit() {}
 
     protected final int getSourceChannel(String channelName) {
@@ -38,4 +43,11 @@ public abstract class BlenderBase implements Blender {
         return -1;
     }
 
+    public List<String> getTargetChannelNames() {
+        return targetChannelNames;
+    }
+
+    public List<String> getSourceChannelNames() {
+        return sourceChannelNames;
+    }
 }

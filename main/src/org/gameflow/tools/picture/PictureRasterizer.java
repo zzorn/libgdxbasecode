@@ -10,6 +10,8 @@ import org.gameflow.tools.picture.blender.Blender;
 import org.gameflow.tools.picture.sampler.ChannelSampler;
 import org.gameflow.tools.picture.sampler.PictureSampler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,11 +22,11 @@ public final class PictureRasterizer {
     private final static Rectangle ZERO_TO_ONE_RECT = new Rectangle(0,0,1,1);
 
     private final Rectangle tempRect = new Rectangle(0,0,1,1);
-    private final FloatArray targetData = new FloatArray();
-    private final FloatArray sourceData = new FloatArray();
-    private final Array<String> sourceChannelNames = new Array<String>();
+    private float[] targetData;
+    private float[] sourceData;
+    private final List<String> sourceChannelNames = new ArrayList<String>();
+    private final List<String> targetChannelNames = new ArrayList<String>();
     private final Array<ChannelSampler> sourceChannels = new Array<ChannelSampler>();
-    private final Array<String> targetChannelNames = new Array<String>();
     private final Array<Channel> targetChannels= new Array<Channel>();
 
     public void renderPicture(Picture target, PictureSampler source, Blender blender) {
@@ -41,25 +43,27 @@ public final class PictureRasterizer {
 
     public void renderPicture(Picture target, PictureSampler source, Rectangle targetArea, Rectangle sourceArea, Blender blender) {
         // Clear temporary structures
-        targetData.clear();
-        sourceData.clear();
         sourceChannelNames.clear();
         targetChannelNames.clear();
         sourceChannels.clear();
         targetChannels.clear();
 
+        // Re-allocate source and target data arrays if needed.
+        final int targetChannelCount = target.getChannels().size();
+        final int sourceChannelCount = source.getChannelSamplers().size();
+        if (targetData == null || targetData.length < targetChannelCount) targetData = new float[targetChannelCount];
+        if (sourceData == null || sourceData.length < sourceChannelCount) sourceData = new float[sourceChannelCount];
+
         // Get source channels
         for (Map.Entry<String, ? extends ChannelSampler> entry : source.getChannelSamplers().entrySet()) {
             sourceChannelNames.add(entry.getKey());
             sourceChannels.add(entry.getValue());
-            sourceData.add(0);
         }
 
         // Get target channels
         for (Map.Entry<String, Channel> entry : target.getChannels().entrySet()) {
             targetChannelNames.add(entry.getKey());
             targetChannels.add(entry.getValue());
-            targetData.add(0);
         }
 
         // Initialize the blender
@@ -86,21 +90,21 @@ public final class PictureRasterizer {
             for (int x = x1; x < x2; x++, sx += sxd) {
 
                 // Get source pixel data from channels
-                for (int i = 0; i < sourceChannels.size; i++) {
-                    sourceData.items[i] = sourceChannels.get(i).getRelativePixel(sx, sy);
+                for (int i = 0; i < sourceChannelCount; i++) {
+                    sourceData[i] = sourceChannels.get(i).getRelativePixel(sx, sy);
                 }
 
                 // Get target pixel data from channels
-                for (int i = 0; i < targetChannels.size; i++) {
-                    targetData.items[i] = targetChannels.get(i).getPixel(x, y);
+                for (int i = 0; i < targetChannelCount; i++) {
+                    targetData[i] = targetChannels.get(i).getPixel(x, y);
                 }
 
                 // Blend source onto target
                 blender.blend(targetData, sourceData);
 
                 // Store changes
-                for (int i = 0; i < targetChannels.size; i++) {
-                    targetChannels.get(i).setPixel(x, y, targetData.items[i]);
+                for (int i = 0; i < targetChannelCount; i++) {
+                    targetChannels.get(i).setPixel(x, y, targetData[i]);
                 }
             }
         }
