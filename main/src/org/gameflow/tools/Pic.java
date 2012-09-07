@@ -14,9 +14,9 @@ import static org.gameflow.utils.MathTools.clamp;
  * A surface to paint on.
  * Supports painting pixmaps, other paintings, and some basic shapes.
  */
-// TODO: Masking
+// TODO: Move wrapping code elsewhere, then remove this
 public class Pic {
-
+/*
     private final Pixmap pixmap;
 
     private Map<String, Channel> channels = null;
@@ -92,10 +92,10 @@ public class Pic {
         pixmap.fill();
     }
 
-    /**
+    / **
      * @param pixmap
      * @return true if the picture was wrapped.
-     */
+     * /
     public boolean draw(Pixmap pixmap,
                      int srcX, int srcY, int srcW, int srcH,
                      int dstX, int dstY, int dstW, int dstH) {
@@ -166,9 +166,9 @@ public class Pic {
         return drawEffect(effect,x, y, scaleX, scaleY, flipX, flipY, direction, 0,0,0);
     }
 
-    /**
+    / **
     * Draws an effect on the pixmap.
-    */
+    * /
     public boolean drawEffect(PictureEffect effect,
                            float x, float y,
                            float scaleX, float scaleY,
@@ -242,5 +242,5 @@ public class Pic {
         return wrapHorizontally && x1 < 0 && x2 >= 0;
     }
 
-
+*/
 }

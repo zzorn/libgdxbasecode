@@ -3,9 +3,16 @@ package org.gameflow.utils;
 /**
  *
  */
-public class MathTools {
+public final class MathTools {
 
+    /**
+     * Tau is 2 Pi, see http://www.tauday.com
+     */
     public static final double Tau = Math.PI * 2;
+
+    /**
+     * Floating point version of Tau.
+     */
     public static final float TauFloat = (float) Tau;
 
     public static float mix(float t, float start, float end) {
@@ -95,4 +102,12 @@ public class MathTools {
         float y = y2 - y1;
         return x*x + y*y;
     }
+
+    /**
+     * Fast floor function (much faster than Math.floor()).
+     */
+    public static int fastFloor(final double value) {
+        return value < 0.0 ? (int)(value - 1) : (int) value;
+    }
+
 }

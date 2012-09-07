@@ -5,14 +5,17 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ObjectIntMap;
+import com.badlogic.gdx.utils.ObjectMap;
 import org.gameflow.tools.picture.blender.Blender;
 import org.gameflow.tools.picture.sampler.ChannelSampler;
 import org.gameflow.tools.picture.sampler.PictureSampler;
 
+import java.util.Map;
+
 /**
  * Handles iterating through pictures and blending source pixels on target pixels.
  */
-public final class PictureRenderer {
+public final class PictureRasterizer {
 
     private final static Rectangle ZERO_TO_ONE_RECT = new Rectangle(0,0,1,1);
 
@@ -20,7 +23,9 @@ public final class PictureRenderer {
     private final FloatArray targetData = new FloatArray();
     private final FloatArray sourceData = new FloatArray();
     private final Array<String> sourceChannelNames = new Array<String>();
+    private final Array<ChannelSampler> sourceChannels = new Array<ChannelSampler>();
     private final Array<String> targetChannelNames = new Array<String>();
+    private final Array<Channel> targetChannels= new Array<Channel>();
 
     public void renderPicture(Picture target, PictureSampler source, Blender blender) {
         tempRect.setX(0);
@@ -40,18 +45,20 @@ public final class PictureRenderer {
         sourceData.clear();
         sourceChannelNames.clear();
         targetChannelNames.clear();
+        sourceChannels.clear();
+        targetChannels.clear();
 
         // Get source channels
-        Array<? extends ChannelSampler> sourceChannelSamplers = source.getChannelSamplers();
-        for (ChannelSampler sourceChannelSampler : sourceChannelSamplers) {
-            sourceChannelNames.add(sourceChannelSampler.getName());
+        for (Map.Entry<String, ? extends ChannelSampler> entry : source.getChannelSamplers().entrySet()) {
+            sourceChannelNames.add(entry.getKey());
+            sourceChannels.add(entry.getValue());
             sourceData.add(0);
         }
 
         // Get target channels
-        Array<Channel> targetChannels = target.getChannels();
-        for (Channel channel : targetChannels) {
-            targetChannelNames.add(channel.getName());
+        for (Map.Entry<String, Channel> entry : target.getChannels().entrySet()) {
+            targetChannelNames.add(entry.getKey());
+            targetChannels.add(entry.getValue());
             targetData.add(0);
         }
 
@@ -73,26 +80,28 @@ public final class PictureRenderer {
         float syd = (sy1 + sourceArea.getHeight()) / h;
 
         // Iterate through the target pixels
-        int i;
         float sy = sy1;
         for (int y = y1; y < y2; y++, sy += syd) {
             float sx = sx1;
             for (int x = x1; x < x2; x++, sx += sxd) {
 
                 // Get source pixel data from channels
-                i = 0;
-                for (ChannelSampler sourceChannelSampler : sourceChannelSamplers) {
-                    sourceData.set(i++, sourceChannelSampler.getRelativePixel(sx, sy));
+                for (int i = 0; i < sourceChannels.size; i++) {
+                    sourceData.items[i] = sourceChannels.get(i).getRelativePixel(sx, sy);
                 }
 
                 // Get target pixel data from channels
-                i = 0;
-                for (Channel targetChannel : targetChannels) {
-                    targetData.set(i++, targetChannel.getRelativePixel(x, y));
+                for (int i = 0; i < targetChannels.size; i++) {
+                    targetData.items[i] = targetChannels.get(i).getPixel(x, y);
                 }
 
                 // Blend source onto target
                 blender.blend(targetData, sourceData);
+
+                // Store changes
+                for (int i = 0; i < targetChannels.size; i++) {
+                    targetChannels.get(i).setPixel(x, y, targetData.items[i]);
+                }
             }
         }
     }

@@ -7,11 +7,19 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.ui.tablelayout.Table;
+import com.badlogic.gdx.utils.Array;
 import org.gameflow.screen.Screen2D;
+import org.gameflow.tools.picture.Picture;
+import org.gameflow.tools.picture.effect.PasteEffect;
+import org.gameflow.tools.picture.exporter.PixmapExporter;
+import org.gameflow.tools.picture.generator.PictureGenerator;
+import org.gameflow.tools.picture.generator.SimplePictureGenerator;
+import org.gameflow.tools.picture.sampler.ConstantChannel;
+import org.gameflow.tools.picture.sampler.NoiseChannel;
+import org.gameflow.tools.picture.sampler.SampledPicture;
 
-import java.util.Random;
+import java.util.List;
 
 /**
  *
@@ -21,28 +29,45 @@ public class GraphicsEditScreen extends Screen2D {
     private static final int SIZE = 256;
     private static final Color MID_COLOR = new Color(0.8f, 0.7f, 0.5f, 1);
     private static final Color EDGE_COLOR = new Color(0.3f, 0.2f, 0.3f, 1f);
-    private Texture texture;
+    private Texture texture1;
+    private Texture texture2;
+    private Texture texture3;
+    private Texture texture4;
     //private Pixmap pixmap;
-    private Random random = new Random();
-    private Pic pic;
 
-    private float time = 0;
+    private final PixmapExporter pixmapExporter = new PixmapExporter();
+    private PictureGenerator pictureGenerator;
+
+    private List<Picture> pictures;
+    private List<Pixmap> pixmaps;
+
+    public GraphicsEditScreen() {
+    }
 
     @Override
     protected void onCreate() {
-        //pixmap = new Pixmap(64, 64, Pixmap.Format.RGBA8888);
-        pic = new Pic(SIZE, SIZE, true, true);
 
-        /*
-        for (int i = 0; i < 64; i++) {
-            pixmap.drawPixel(i, i, Color.PINK.toIntBits());
-        }
-        */
-
-
-        texture = new Texture(pic.getPixmap());
+        pictureGenerator = createPictureGenerator();
+        pictures = pictureGenerator.generatePictures();
+        pixmaps = pixmapExporter.exportPictures(pictures, pixmaps);
+        texture1 = new Texture(pixmaps.get(0));
+        texture2 = new Texture(pixmaps.get(1));
+        texture3 = new Texture(pixmaps.get(2));
+        texture4 = new Texture(pixmaps.get(3));
 
         buildUi();
+    }
+
+    private SimplePictureGenerator createPictureGenerator() {
+        SimplePictureGenerator generator = new SimplePictureGenerator("TestPic", 256, 256, 4, 142);
+
+        generator.addEffect(new PasteEffect(new SampledPicture("value", new NoiseChannel(2, 2, 6f, 0.6f, 0.7f, 142, 242))));
+
+//        SampledPicture pic = new SampledPicture();
+//        pic.addChannel("value", new ConstantChannel(0.5f));
+//        generator.addEffect(new PasteEffect(pic));
+
+        return generator;
     }
 
 
@@ -57,11 +82,11 @@ public class GraphicsEditScreen extends Screen2D {
         table.add(settingsTable).left();
 
         Table imagePreview = new Table();
-        imagePreview.add(new Image(texture));
-        imagePreview.add(new Image(texture));
+        imagePreview.add(new Image(texture1));
+        imagePreview.add(new Image(texture2));
         imagePreview.row();
-        imagePreview.add(new Image(texture));
-        imagePreview.add(new Image(texture));
+        imagePreview.add(new Image(texture3));
+        imagePreview.add(new Image(texture4));
         table.add(imagePreview).right();
 
 
@@ -69,12 +94,12 @@ public class GraphicsEditScreen extends Screen2D {
     }
 
     private void updateTexture(float deltaSeconds) {
-        Gdx.gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.getTextureObjectHandle());
-        int width = pic.getWidth();
-        int height = pic.getHeight();
 
         //pixmap.drawPixel(random.nextInt(width), random.nextInt(height), Color.PINK.toIntBits());
 
+
+
+        /*
         time += deltaSeconds;
         pic.clearToColor(Color.ORANGE);
 
@@ -94,9 +119,35 @@ public class GraphicsEditScreen extends Screen2D {
             scale *= 0.97f;
         }
 
-
         Gdx.gl.glTexSubImage2D(GL10.GL_TEXTURE_2D, 0, 0, 0, width, height,
                 pic.getPixmap().getGLFormat(), pic.getPixmap().getGLType(), pic.getPixmap().getPixels());
+        */
+
+
+        Gdx.gl.glBindTexture(
+                GL10.GL_TEXTURE_2D,
+                texture1.getTextureObjectHandle());
+        Gdx.gl.glBindTexture(
+                GL10.GL_TEXTURE_2D,
+                texture2.getTextureObjectHandle());
+        Gdx.gl.glBindTexture(
+                GL10.GL_TEXTURE_2D,
+                texture3.getTextureObjectHandle());
+        Gdx.gl.glBindTexture(
+                GL10.GL_TEXTURE_2D,
+                texture4.getTextureObjectHandle());
+
+        for (Pixmap pixmap : pixmaps) {
+            Gdx.gl.glTexSubImage2D(
+                    GL10.GL_TEXTURE_2D,
+                    0,
+                    0, 0,
+                    pixmap.getWidth(),
+                    pixmap.getHeight(),
+                    pixmap.getGLFormat(),
+                    pixmap.getGLType(),
+                    pixmap.getPixels());
+        }
     }
 
     @Override

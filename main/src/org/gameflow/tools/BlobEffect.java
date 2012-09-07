@@ -3,7 +3,10 @@ package org.gameflow.tools;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
+import org.gameflow.tools.picture.Picture;
 import org.gameflow.tools.picture.effect.PictureEffectBase;
+import org.gameflow.tools.picture.generator.wrap.Wrap;
 import org.gameflow.utils.SimplexGradientNoise;
 
 import java.util.Random;
@@ -14,7 +17,7 @@ import static org.gameflow.utils.MathTools.clamp;
 /**
  *
  */
-public class BlobEffect extends PictureEffectBase {
+public class BlobEffect  {
 
     private float noiseAmount = 0.5f;
     private float noiseScaleX = 0.1f;
@@ -31,7 +34,6 @@ public class BlobEffect extends PictureEffectBase {
         return true;
     }
 
-    @Override
     protected void onSeedChanged(Random random) {
         noiseOffsetX = (float) random.nextGaussian() * 1000;
         noiseOffsetY = (float) random.nextGaussian() * 1000;
@@ -69,6 +71,7 @@ public class BlobEffect extends PictureEffectBase {
         this.gradient = gradient;
     }
 
+    /*
     public boolean draw(Pixmap pixmap,
                         float x, float y,
                         float scaleX, float scaleY,
@@ -118,7 +121,11 @@ public class BlobEffect extends PictureEffectBase {
 
         return anythingDrawn;
     }
+    */
 
+    public void draw(Picture picture, Array<Wrap> wrapsInPicture, long seed) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     public void getNoiseScale(float scale) {
         noiseScaleX = scale;

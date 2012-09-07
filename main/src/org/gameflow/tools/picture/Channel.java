@@ -1,31 +1,25 @@
 package org.gameflow.tools.picture;
 
+import org.gameflow.tools.picture.generator.GeneratorMemberBase;
 import org.gameflow.tools.picture.sampler.ChannelSampler;
 import org.gameflow.utils.ParameterChecker;
 
 /**
  *
  */
-public final class Channel implements ChannelSampler {
-    private final String name;
+public final class Channel extends GeneratorMemberBase implements ChannelSampler {
     private final int width;
     private final int height;
     private final float data[];
 
-    public Channel(String name, int width, int height) {
-        ParameterChecker.checkNotNull(name, "name");
+    public Channel(int width, int height) {
         ParameterChecker.checkPositiveNonZeroInteger(width, "width");
         ParameterChecker.checkPositiveNonZeroInteger(height, "height");
 
-        this.name = name;
         this.width = width;
         this.height = height;
 
         data = new float[width * height];
-    }
-
-    public String getName() {
-        return name;
     }
 
     public float getPixel(int x, int y) {
