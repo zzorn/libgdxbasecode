@@ -1,7 +1,7 @@
 name=images
 filename=
 input=originals/images
-output=android/assets/images
+output=src/main/assets/images
 
 alias=true
 alphaThreshold=0

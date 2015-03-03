@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Provide path to .apk file as first argument
+
 echo "Installing to phone"
-adb -d install -r out/production/Crawl/Crawl.apk
+adb -d install -r $1
 
