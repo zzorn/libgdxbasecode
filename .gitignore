@@ -13,6 +13,9 @@ android/gen/
 
 # Build dirs
 out/
+target/
 
 # Project files
 .idea/
+*.ipr
+*.iml
